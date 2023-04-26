@@ -7,9 +7,8 @@ const ENDPOINT = `${import.meta.env.VITE_API_URL}/api/users`;
 
 export const useUser = (): UseQueryResult<User> => {
   const { userId, setUser, accessToken } = useAuthentication();
-
   return useQuery({
-    enabled: !!userId,
+    enabled: !!userId && !!accessToken,
     placeholderData: null,
     queryKey: ['User', userId],
     queryFn: async () => {

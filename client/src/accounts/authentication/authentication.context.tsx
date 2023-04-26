@@ -1,5 +1,7 @@
 import { Dispatch, FC, ReactElement, createContext, useState } from 'react';
 
+import { useLocalStorage } from '@astrosat/react-utils';
+
 export interface User {
   email: string;
   name?: string;
@@ -7,9 +9,13 @@ export interface User {
   roles?: number[];
 }
 
+type UserId = string | null;
+
+type SetUserId = Dispatch<string | null>;
+
 export type AuthenticationContextType = {
-  userId: string | null;
-  setUserId: Dispatch<string | null>;
+  userId: UserId;
+  setUserId: SetUserId;
   user: User | null;
   setUser: Dispatch<User | null>;
   accessToken: string | null;
@@ -25,8 +31,8 @@ interface Props {
 
 export const AuthenticationProvider: FC<Props> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [userId, setUserId] = useState<string | null>(null);
-  const [accessToken, setAccessToken] = useState<User | null>(null);
+  const [userId, setUserId] = useLocalStorage('userId', undefined);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
 
   return (
     <AuthenticationContext.Provider value={{ userId, setUserId, user, setUser, accessToken, setAccessToken }}>

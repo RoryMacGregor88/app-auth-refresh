@@ -103,7 +103,7 @@ export const refreshToken = async (req: Request, res: Response) => {
         maxAge: COOKIE_MAX_AGE,
       });
 
-      res.json({ accessToken, id: existingUser._id });
+      return res.json({ accessToken });
     },
   );
 };

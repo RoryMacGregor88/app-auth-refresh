@@ -8,7 +8,7 @@ import { useAuthentication } from '../authentication/authentication.hook';
 const ENDPOINT = `${import.meta.env.VITE_API_URL}/api/accounts/refresh`;
 
 export const useRefresh = (): UseQueryResult<string> => {
-  const { setAccessToken, setUserId } = useAuthentication();
+  const { setAccessToken } = useAuthentication();
   const { refetch: logout } = useLogout();
 
   return useQuery({
@@ -30,9 +30,7 @@ export const useRefresh = (): UseQueryResult<string> => {
 
       const data = await response.json();
 
-      setUserId(data.id);
       setAccessToken(data.accessToken);
-
       return data.accessToken;
     },
   });
