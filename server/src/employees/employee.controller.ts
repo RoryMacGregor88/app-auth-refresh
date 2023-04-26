@@ -6,7 +6,6 @@ import { EmployeeModel } from './employee.model';
 
 export const getEmployees = async (req: Request, res: Response) => {
   const employees = await EmployeeModel.find();
-  console.log('EMPLOYEES: ', employees);
 
   if (!employees) {
     res.status(NO_CONTENT).json({ message: 'No employees found.' });
@@ -21,7 +20,6 @@ export const getEmployee = async (req: Request, res: Response) => {
   }
 
   const employee = await EmployeeModel.findOne({ _id: req.params.id }).exec();
-  console.log('EMPLOYEE: ', employee);
 
   if (!employee) {
     res.status(BAD_REQUEST_ERROR).json({ message: `Employee with ID: ${req?.params?.id} not found.` });
@@ -53,7 +51,6 @@ export const updateEmployee = async (req: Request, res: Response) => {
   }
 
   const employee = await EmployeeModel.findOne({ _id: req.body.id }).exec();
-  console.log('EXISTING EMPLOYEE: ', employee);
 
   if (!employee) {
     return res.status(NO_CONTENT).json({ message: `Employee with ID: ${req.body.id} not found.` });
@@ -84,7 +81,6 @@ export const deleteEmployee = async (req: Request, res: Response) => {
   }
 
   const result = await EmployeeModel.deleteOne({ _id: req.params.id });
-  console.log('DELETED EMPLOYEE: ', result);
 
   res.json(result);
 };

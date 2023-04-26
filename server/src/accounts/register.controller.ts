@@ -16,7 +16,6 @@ import { BAD_REQUEST_ERROR, CONFLICT_ERROR, CREATED, INTERNAL_SERVER_ERROR } fro
  */
 export const register = async (req: Request, res: Response) => {
   createUser(req, res);
-  // // console.log('REGISTERING USER: ', req.body);
   // const { email, password } = req.body;
 
   // // If neither email or password exist, then it's not possible to
@@ -30,7 +29,6 @@ export const register = async (req: Request, res: Response) => {
   // if (existingUser) {
   //   return res.sendStatus(CONFLICT_ERROR);
   // }
-  // // console.log('IS EXISTING USER: ', existingUser);
 
   // try {
   //   // Encrypt password.
@@ -40,7 +38,6 @@ export const register = async (req: Request, res: Response) => {
   //     email,
   //     password: hashedPassword,
   //   });
-  //   console.log('USER CREATED: ', result);
 
   //   res.status(CREATED).json({
   //     message: 'New user created',

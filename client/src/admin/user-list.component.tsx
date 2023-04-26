@@ -7,9 +7,7 @@ interface Props {}
 
 export const UserList: FC<Props> = (): ReactElement => {
   const { user } = useAuthentication();
-  // console.log('USER MAKING REQUEST: ', user);
   const { data: users, isLoading, isError, error } = useUsers();
-  // console.log('USERS FOUND: ', users);
   return (
     <>
       {users ? (

@@ -6,12 +6,9 @@ import { RegisterForm } from './register-form.component';
 import { RegistrationFormType, useRegister } from './register.hook';
 
 export const Register: FC = (): ReactElement => {
-  const { mutate: register, data: registeredUserId, error, isError, isLoading } = useRegister();
-  // console.log('REGISTERED USER ID: ', registeredUserId);
-  // console.log('REGISTRATION ERROR: ', error);
+  const { mutate: register, isError, isLoading } = useRegister();
 
   const onRegister = (form: RegistrationFormType) => {
-    // console.log('Register: ', form);
     register(form);
   };
 

@@ -21,7 +21,6 @@ export const useApiClient = () => {
       customHeaders: HeadersInit = {},
       config: Record<string, unknown> = {},
     ) => {
-      // console.log('ACCESS TOKEN: ', accessToken);
       // const headers = {};
 
       // if (accessToken) {
@@ -46,18 +45,14 @@ export const useApiClient = () => {
         },
         ...config,
       };
-      // console.log('REQUEST CONFIG: ', customConfig);
       let response = await fetch(endpoint, customConfig);
-      // console.log('RESPONSE: ', response);
 
       const previousRequest = customConfig;
       if (response.status === UNAUTHORIZED_ERROR && !previousRequest?.sent) {
         previousRequest.sent = true;
         const { data: newAccessToken } = await refresh();
-        // console.log('NOT AUTHORIZED: ', newAccessToken);
 
         if (newAccessToken) {
-          // console.log('NEW ACCESS TOKEN: ', newAccessToken);
           previousRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
           response = await fetch(endpoint, previousRequest);
         }
@@ -71,9 +66,7 @@ export const useApiClient = () => {
         return Promise.reject({ message: 'Please re-authenticate' });
       }
 
-      // console.log('RESPONSE: ', response);
       const responseData = await response.json();
-      // console.log('RESPONSE DATA: ', responseData);
 
       return response.ok ? responseData : Promise.reject(responseData);
     },

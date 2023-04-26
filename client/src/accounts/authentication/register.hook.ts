@@ -21,9 +21,7 @@ export const useRegister = () => {
   const apiClient = useApiClient();
 
   return useMutation(async (form: RegistrationFormType) => {
-    console.log('REGISTER MUTATION FORM: ', form);
     const data = await apiClient(ENDPOINT, form);
-    console.log('REGISTER RESULT: ', data);
     // const response = await fetch(ENDPOINT, {
     //   method: 'POST',
     //   headers: {
@@ -39,7 +37,6 @@ export const useRegister = () => {
     // }
 
     // const data = await response.json();
-    // console.log('REGISTERED USER: ', data);
 
     // return RegistrationFormSchema.parse(data);
     return data.id;
@@ -48,7 +45,6 @@ export const useRegister = () => {
   // const register = async (form: RegistrationFormType) => {
   //   try {
   //     // Register new user.
-  //     console.log('REGISTER USER: ', form);
   //   } catch (error) {
   //     console.error(error);
   //   }

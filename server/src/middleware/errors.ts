@@ -12,13 +12,9 @@ import { logEvent } from './logger';
  * @param {Response} res
  */
 export const errorHandler = (error: Error, req: Request, res: Response, next: NextFunction) => {
-  console.log('ERROR HANDLER:', error);
-  console.log('REQUEST:', req);
-  console.log('RESPONSE:', res);
+  console.log('ERROR inside errorHandler:', error);
   logEvent(`${error.name}: ${error.message}`, 'error.log');
 
   console.error(error.stack);
-  console.log('WTF:', typeof res.status);
-  res.status(500).send(error.message);
-  // res.status(INTERNAL_SERVER_ERROR).send(error.message);
+  res.status(INTERNAL_SERVER_ERROR).send(error.message);
 };

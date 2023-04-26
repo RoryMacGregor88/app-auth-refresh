@@ -23,7 +23,6 @@ describe('API Client', () => {
   describe.skip('api', () => {
     it('should test the GET function with no querystring', async () => {
       const response = await api.get(endpoint);
-      console.log('RESULT: ', JSON.stringify(response));
 
       expect(response).toEqual(mockResult);
     });
@@ -31,7 +30,6 @@ describe('API Client', () => {
     it('should test the GET function with a querystring', async () => {
       const querystring = 'name=john&age=28&dob=2001-01-01T00:00:00';
       const response = await api.get(`${endpoint}?${querystring}`);
-      console.log('RESULT: ', JSON.stringify(response));
 
       expect(response).toEqual(mockResult);
     });
@@ -45,7 +43,6 @@ describe('API Client', () => {
       );
 
       const response = await api.get(endpoint).catch(error => error);
-      console.log('RESPONSE: ', response);
       expect(response).toEqual(mockError);
     });
   });
@@ -53,7 +50,6 @@ describe('API Client', () => {
   describe.skip('apiClient', () => {
     it('should test `apiClient`', async () => {
       const response = await apiClient(endpoint);
-      console.log('RESULT: ', JSON.stringify(response));
 
       expect(response).toEqual(mockResult);
     });
@@ -62,7 +58,6 @@ describe('API Client', () => {
   describe.skip('client', () => {
     it('should test `client`', async () => {
       const response = await client(endpoint);
-      console.log('RESULT: ', JSON.stringify(response));
 
       expect(response).toEqual(mockResult);
     });

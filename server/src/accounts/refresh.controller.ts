@@ -8,21 +8,16 @@ import { ACCESS_TOKEN_DURATION, COOKIE_MAX_AGE, REFRESH_TOKEN_DURATION } from '.
 
 export const refreshToken = async (req: Request, res: Response) => {
   const refreshCookieName = process.env.REFRESH_COOKIE_NAME;
-  console.log('REFRESH REFRESH COOKIE NAME: ', refreshCookieName);
 
   if (!refreshCookieName) {
     throw new Error('Missing Environment Variable for the cookie name');
   }
 
   const cookies = req.cookies;
-  // console.log('ALL COOKIE: ', cookies);
-  console.log('OLD REFRESH COOKIE: ', cookies[refreshCookieName]);
 
   if (!cookies[refreshCookieName]) {
-    console.log('COOKIE DOES NOT EXIST');
     return res.sendStatus(UNAUTHORIZED_ERROR);
   }
-  // console.log('REFRESHING COOKIE: ', cookies[refreshCookieName]);
 
   const refreshToken = cookies[refreshCookieName];
   res.clearCookie(refreshCookieName, {
@@ -33,7 +28,6 @@ export const refreshToken = async (req: Request, res: Response) => {
 
   // const existingUser = await UserModel.find().findByRefreshToken(refreshToken).exec();
   const existingUser = await UserModel.findOne({ refreshTokens: refreshToken }).exec();
-  console.log('EXISTING USER: ', existingUser);
   if (!existingUser) {
     // Detected re-use of the refresh token, if cookie with token, but
     // no associated user, then might have been hacked, so we need to
@@ -43,7 +37,6 @@ export const refreshToken = async (req: Request, res: Response) => {
       process.env.REFRESH_TOKEN_SECRET as Secret,
       async (err: VerifyErrors, decoded: Record<string, unknown>) => {
         if (err) {
-          console.log('TOKEN VERIFICATION: ', err);
           return res.sendStatus(UNAUTHORIZED_ERROR);
         }
         // We now have a the decoded user associated
@@ -79,7 +72,6 @@ export const refreshToken = async (req: Request, res: Response) => {
       }
 
       if (err || existingUser.email !== decoded.email) {
-        console.log('REFRESH ERROR OR NO EMAIL');
         return res.sendStatus(UNAUTHORIZED_ERROR);
       }
 
@@ -97,7 +89,6 @@ export const refreshToken = async (req: Request, res: Response) => {
       // Put refresh token into database against current user.
       existingUser.refreshTokens = [...refreshTokens, newRefreshToken];
       const result = await existingUser.save();
-      console.log('SAVED USER: ', result);
 
       // Set http only cookie, so it isn't available to JavaScript.
       // const refreshCookieName = process.env.refreshCookieName;
@@ -105,7 +96,6 @@ export const refreshToken = async (req: Request, res: Response) => {
       //   throw new Error('Missing Environment Variable for the cookie name');
       // }
 
-      console.log('NEW REFRESH COOKIE: ', newRefreshToken);
       res.cookie(refreshCookieName, newRefreshToken, {
         httpOnly: true,
         sameSite: 'none',
@@ -113,7 +103,7 @@ export const refreshToken = async (req: Request, res: Response) => {
         maxAge: COOKIE_MAX_AGE,
       });
 
-      res.json({ accessToken });
+      res.json({ accessToken, id: existingUser._id });
     },
   );
 };

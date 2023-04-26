@@ -3,18 +3,20 @@ import { FC } from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
 import { useAuthentication } from '~/accounts/authentication/authentication.hook';
+import { User } from '~/accounts/users/users.hook';
 
 interface Props {
+  user: User;
   roles: number[];
 }
 
-export const Authorization: FC<Props> = ({ roles }) => {
-  const { user, setUser, accessToken } = useAuthentication();
-  console.log('IS AUTHORIZATION: ', { user, accessToken });
+export const Authorization: FC<Props> = ({ user, roles }) => {
   const location = useLocation();
-  // console.log('AUTHORIZATION LOCATION: ', location);
+  const { accessToken } = useAuthentication();
 
-  return user?.roles?.find((role: number) => roles?.includes(role)) ? (
+  const hasRole = !!user?.roles?.find((role: number) => roles?.includes(role));
+
+  return hasRole ? (
     <Outlet />
   ) : accessToken ? (
     <Navigate replace state={{ from: location }} to="/unauthorized" />

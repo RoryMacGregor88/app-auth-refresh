@@ -13,8 +13,8 @@ interface Props {
 }
 
 export const errorHandler = (error: Error, info: { componentStack: string }) => {
-  console.log('HERE IS THE ERROR: ', error);
-  console.log('HERE IS THE INFO: ', info);
+  console.log('ERROR inside errorHandler: ', error);
+  console.log('INFO inside errorHandler: ', info);
 };
 
 export const ErrorFallback: FC<Props> = ({

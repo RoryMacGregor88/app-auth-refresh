@@ -105,7 +105,6 @@ export const client = async <T = unknown>(
 // const handleResponse = async (response: Response) => {
 //   const text = await response.text();
 //   const data = text && JSON.parse(text);
-//   console.log('IS RESPONSE OK: ', response.ok);
 //   if (!response.ok) {
 //     const error = (data && data.message) || response.statusText;
 //     return Promise.reject(error);
@@ -141,7 +140,6 @@ export const client = async <T = unknown>(
 //         ...headers,
 //       },
 //     });
-//     console.log('RESPONSE: ', res);
 //     // const data = await res.json();
 //     if (!res.ok) {
 //       const error = await res.json();
@@ -185,7 +183,6 @@ export const client = async <T = unknown>(
 
 //   const response = await fetch(`${API_URL}/${url}`, config);
 //   const responseData = await response.json();
-//   console.log('RESPONSE DATA: ', responseData);
 
 //   return response.ok ? responseData : Promise.reject(responseData);
 //   // return response.ok ? responseData : Promise.reject(new Error(responseData));

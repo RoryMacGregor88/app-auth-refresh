@@ -6,9 +6,7 @@ import { BAD_REQUEST_ERROR, CONFLICT_ERROR, CREATED, INTERNAL_SERVER_ERROR, NO_C
 import { UserModel } from './user.model';
 
 export const getUsers = async (req: Request, res: Response) => {
-  console.log('GETTING USERS COOKIE: ', req.cookies);
   const users = await UserModel.find();
-  console.log('USERS: ', users);
 
   if (!users) {
     res.status(BAD_REQUEST_ERROR).json({ message: 'No users found.' });
@@ -18,13 +16,11 @@ export const getUsers = async (req: Request, res: Response) => {
 };
 
 export const getUser = async (req: Request, res: Response) => {
-  console.log('USER ID: ', req?.params);
   if (!req?.params?.id) {
     return res.status(BAD_REQUEST_ERROR).json({ message: 'ID of user required' });
   }
 
   const user = await UserModel.findOne({ _id: req.params.id }).exec();
-  console.log('USER: ', user);
 
   if (!user) {
     res.status(BAD_REQUEST_ERROR).json({ message: `User with ID: ${req?.params?.id} not found.` });
@@ -34,7 +30,6 @@ export const getUser = async (req: Request, res: Response) => {
 };
 
 export const createUser = async (req: Request, res: Response) => {
-  console.log('CREATE USER: ', req.body);
   const { email, password, firstName, lastName } = req.body;
 
   // If neither email or password exist, then it's not possible to
@@ -48,7 +43,6 @@ export const createUser = async (req: Request, res: Response) => {
   if (existingUser) {
     return res.sendStatus(CONFLICT_ERROR);
   }
-  // console.log('IS EXISTING USER: ', existingUser);
 
   try {
     // const result = await UserModel.create({
@@ -72,7 +66,6 @@ export const createUser = async (req: Request, res: Response) => {
       firstName: firstName ?? '',
       lastName: lastName ?? '',
     });
-    console.log('USER CREATED: ', result._id);
 
     res.status(CREATED).json({
       id: result._id,
@@ -93,7 +86,6 @@ export const updateUser = async (req: Request, res: Response) => {
   }
 
   const user = await UserModel.findOne({ _id: req.body.id }).exec();
-  console.log('EXISTING USER: ', user);
 
   if (!user) {
     return res.status(BAD_REQUEST_ERROR).json({ message: `User with ID: ${req.body.id} not found.` });
@@ -127,8 +119,7 @@ export const deleteUser = async (req: Request, res: Response) => {
     return res.status(BAD_REQUEST_ERROR).json({ message: `User with ID: ${req.params.id} not found.` });
   }
 
-  const result = await UserModel.deleteOne({ _id: req.params.id });
-  console.log('DELETED USER: ', result);
+  await UserModel.deleteOne({ _id: req.params.id });
 
   res.status(NO_CONTENT);
 };

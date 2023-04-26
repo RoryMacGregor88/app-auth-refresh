@@ -8,7 +8,11 @@ import { useAuthentication } from '../authentication/authentication.hook';
 const ENDPOINT = `${import.meta.env.VITE_API_URL}/api/users/`;
 
 export const UserData = z.object({
+  _id: z.string(),
   email: z.string(),
+  password: z.string(),
+  refreshTokens: z.array(z.string()),
+  roles: z.array(z.number()),
 });
 
 const Users = z.array(UserData);
@@ -23,7 +27,6 @@ export const useUsers = (): UseQueryResult<User[]> => {
     ['Users'],
     async () => {
       const data = await apiClient(ENDPOINT, null, null, { method: 'GET' });
-      // console.log('QUERY DATA: ', data);
       // const response = await fetch(ENDPOINT, {
       //   credentials: 'include',
       //   headers: {

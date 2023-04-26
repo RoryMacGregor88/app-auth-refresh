@@ -37,7 +37,6 @@ export const RegisterForm: FC<FormProps> = ({ registerUser }): ReactElement => {
     resolver: zodResolver(RegistrationFormSchema),
     defaultValues: defaultFormValues,
   });
-  console.log('REGISTER ERRORS: ', errors);
 
   const onSubmit: SubmitHandler<RegistrationFormType> = form => registerUser(form);
 
