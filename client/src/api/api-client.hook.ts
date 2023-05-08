@@ -6,7 +6,7 @@ import { useAuthentication } from '~/accounts/authentication/authentication.hook
 import { useLogout } from '~/accounts/authentication/logout.hook';
 import { useRefresh } from '~/accounts/authentication/refresh.hook';
 
-import { UNAUTHORIZED_ERROR } from './api.constants';
+import { UNAUTHENTICATED_ERROR_MESSAGE, UNAUTHORIZED_ERROR } from './api.constants';
 
 export const useApiClient = () => {
   const { accessToken } = useAuthentication();
@@ -63,12 +63,10 @@ export const useApiClient = () => {
       }
 
       if (!response.ok) {
-        return Promise.reject({ message: 'Please re-authenticate' });
+        return Promise.reject({ message: UNAUTHENTICATED_ERROR_MESSAGE });
       }
 
-      const responseData = await response.json();
-
-      return response.ok ? responseData : Promise.reject(responseData);
+      return await response.json();
     },
     [accessToken, refresh],
   );
