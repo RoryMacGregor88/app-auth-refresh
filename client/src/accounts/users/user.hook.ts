@@ -7,6 +7,7 @@ const ENDPOINT = `${import.meta.env.VITE_API_URL}/api/users`;
 
 export const useUser = (): UseQueryResult<User> => {
   const { userId, setUser, accessToken } = useAuthentication();
+
   return useQuery({
     enabled: !!userId && !!accessToken,
     placeholderData: null,
@@ -21,12 +22,13 @@ export const useUser = (): UseQueryResult<User> => {
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(`Error fetching app config, Message: ${error.message}`);
+        return Promise.reject(new Error(error.message));
       }
 
       const data: User = await response.json();
 
       setUser(data);
+
       return UserData.parse(data);
     },
   });

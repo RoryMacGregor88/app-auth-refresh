@@ -26,17 +26,16 @@ export const AuthenticationContext = createContext<AuthenticationContextType | n
 AuthenticationContext.displayName = 'AuthenticationContext';
 
 interface Props {
+  initialState?: Partial<AuthenticationContextType>;
   children: ReactElement;
 }
 
-export const AuthenticationProvider: FC<Props> = ({ children }) => {
+export const AuthenticationProvider: FC<Props> = ({ initialState = {}, children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [userId, setUserId] = useLocalStorage('userId', undefined);
   const [accessToken, setAccessToken] = useState<string | null>(null);
 
-  return (
-    <AuthenticationContext.Provider value={{ userId, setUserId, user, setUser, accessToken, setAccessToken }}>
-      {children}
-    </AuthenticationContext.Provider>
-  );
+  const value = { userId, setUserId, user, setUser, accessToken, setAccessToken, ...initialState };
+
+  return <AuthenticationContext.Provider value={value}>{children}</AuthenticationContext.Provider>;
 };

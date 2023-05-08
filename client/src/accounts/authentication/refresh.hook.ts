@@ -1,7 +1,7 @@
 import { UseQueryResult, useQuery } from '@tanstack/react-query';
 
 import { useLogout } from '~/accounts/authentication/logout.hook';
-import { UNAUTHORIZED_ERROR } from '~/api/api.constants';
+import { UNAUTHENTICATED_ERROR_MESSAGE, UNAUTHORIZED_ERROR } from '~/api/api.constants';
 
 import { useAuthentication } from '../authentication/authentication.hook';
 
@@ -25,7 +25,7 @@ export const useRefresh = (): UseQueryResult<string> => {
       }
 
       if (!response.ok) {
-        throw new Error('Error Refreshing tokens');
+        return Promise.reject(UNAUTHENTICATED_ERROR_MESSAGE);
       }
 
       const data = await response.json();

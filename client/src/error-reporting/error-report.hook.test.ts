@@ -1,10 +1,11 @@
+/*eslint import/namespace: ["off"]*/
 import { rest } from 'msw';
 import { describe, expect, it } from 'vitest';
 
 import { server } from '~/mocks/server';
 import { act, renderHook, waitFor } from '~/test/utils';
 
-import { useCreateErrorReport, ErrorReport } from './error-report.hook';
+import { ErrorReport, useCreateErrorReport } from './error-report.hook';
 
 interface Result {
   isSuccess: boolean;

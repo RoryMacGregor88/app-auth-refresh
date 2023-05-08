@@ -50,20 +50,21 @@ export const useApiClient = () => {
       const previousRequest = customConfig;
       if (response.status === UNAUTHORIZED_ERROR && !previousRequest?.sent) {
         previousRequest.sent = true;
-        const { data: newAccessToken } = await refresh();
+        const { isError, error, data: newAccessToken } = await refresh();
+
+        if (isError) {
+          return Promise.reject(error);
+        }
 
         if (newAccessToken) {
           previousRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
           response = await fetch(endpoint, previousRequest);
         }
-
-        // await logout();
-        // navigate('/', { replace: true });
-        // return Promise.reject({ message: 'Please re-authenticate' });
       }
 
       if (!response.ok) {
-        return Promise.reject({ message: UNAUTHENTICATED_ERROR_MESSAGE });
+        const error = await response.json();
+        return Promise.reject(error);
       }
 
       return await response.json();

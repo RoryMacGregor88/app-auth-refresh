@@ -40,11 +40,9 @@ describe('useApiClient', () => {
     /** refresh endpoint when original request is unauthorized */
     server.use(rest.get(REFRESH_ENDPOINT, (req, res, ctx) => res(ctx.status(HTTP_OK), ctx.json({ accessToken }))));
 
-    const {
-      result: { current },
-    } = renderHook(() => useApiClient());
+    const { result } = renderHook(() => useApiClient());
 
-    const asyncCallback = current as (endpoint: string) => Promise<{ name: string }>;
+    const asyncCallback = result.current as (endpoint: string) => Promise<{ name: string }>;
 
     let data: { name: string };
     await act(async () => {
@@ -56,6 +54,24 @@ describe('useApiClient', () => {
     });
   });
 
+  it('should reject promise if refresh request fails', async () => {
+    /** original endpoint */
+    server.use(rest.post(ENDPOINT, async (req, res, ctx) => res(ctx.status(UNAUTHORIZED_ERROR), ctx.json({}))));
+
+    /** refresh endpoint when original request is unauthorized */
+    server.use(rest.get(REFRESH_ENDPOINT, (req, res, ctx) => res(ctx.status(SERVER_ERROR), ctx.json({}))));
+
+    const { result } = renderHook(() => useApiClient());
+
+    const asyncCallback = result.current as (endpoint: string) => Promise<string>;
+
+    try {
+      await asyncCallback(ENDPOINT);
+    } catch (error) {
+      expect(error).toEqual(UNAUTHENTICATED_ERROR_MESSAGE);
+    }
+  });
+
   it.each([SERVER_ERROR, HTTP_FORBIDDEN, HTTP_BAD_REQUEST])(
     'should reject promise for %s error responses',
     async status => {
@@ -63,16 +79,14 @@ describe('useApiClient', () => {
 
       server.use(rest.post(ENDPOINT, (req, res, ctx) => res(ctx.status(status), ctx.json({ message }))));
 
-      const {
-        result: { current },
-      } = renderHook(() => useApiClient());
+      const { result } = renderHook(() => useApiClient());
 
-      const asyncCallback = current as (endpoint: string) => Promise<void>;
+      const asyncCallback = result.current as (endpoint: string) => Promise<void>;
 
       try {
         await asyncCallback(ENDPOINT);
       } catch (error) {
-        expect(error).toEqual({ message: UNAUTHENTICATED_ERROR_MESSAGE });
+        expect(error).toEqual({ message });
       }
     },
   );
@@ -82,11 +96,9 @@ describe('useApiClient', () => {
 
     server.use(rest.post(ENDPOINT, (req, res, ctx) => res(ctx.status(HTTP_OK), ctx.json(responseData))));
 
-    const {
-      result: { current },
-    } = renderHook(() => useApiClient());
+    const { result } = renderHook(() => useApiClient());
 
-    const asyncCallback = current as (endpoint: string) => Promise<void>;
+    const asyncCallback = result.current as (endpoint: string) => Promise<void>;
 
     const data = await asyncCallback(ENDPOINT);
 
