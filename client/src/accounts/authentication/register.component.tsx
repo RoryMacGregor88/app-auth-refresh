@@ -1,31 +1,29 @@
-import { FC, ReactElement, useEffect, useState } from 'react';
+import { FC, ReactElement } from 'react';
 
+import { ACCOUNT_CREATED_SUCCESS_MESSAGE } from '~/accounts/accounts.constants';
+import { RegistrationFormType, useRegister } from '~/accounts/authentication/register.hook';
 import { FormWrapper } from '~/components/forms/form-wrapper.component';
-import { ServerError } from '~/types';
+import { Loadmask } from '~/components/loadmask.component';
+import { Well } from '~/components/well.component';
 
 import { RegisterForm } from './register-form.component';
-import { RegistrationFormType, useRegister } from './register.hook';
 
 export const Register: FC = (): ReactElement => {
-  const { isError: isRegisterError, error: registerError, mutate: register } = useRegister();
-  const [serverError, setServerError] = useState<ServerError | null>(null);
+  const { isError, error, isLoading, data, mutate: register } = useRegister();
 
   const onRegister = (form: RegistrationFormType) => {
     register(form);
   };
 
-  useEffect(() => {
-    if (isRegisterError) {
-      setServerError({ message: String(registerError) });
-    }
-  }, [isRegisterError, registerError]);
-
-  return (
+  return isLoading ? (
+    <Loadmask />
+  ) : (
     <FormWrapper>
-      <>
-        <h1 className="offscreen">Register</h1>
-        <RegisterForm error={serverError} registerUser={onRegister} />
-      </>
+      {isError ? <Well message={String(error)} status="error" /> : null}
+      {data ? <Well message={ACCOUNT_CREATED_SUCCESS_MESSAGE} status="success" /> : null}
+
+      <h1 className="offscreen">Register</h1>
+      <RegisterForm registerUser={onRegister} />
     </FormWrapper>
   );
 };

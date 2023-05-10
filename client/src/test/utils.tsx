@@ -1,7 +1,7 @@
 import { JSXElementConstructor, ReactElement } from 'react';
 
 import { QueryClient, QueryClientConfig, QueryClientProvider } from '@tanstack/react-query';
-import { RenderHookOptions, RenderHookResult, RenderResult, render, renderHook } from '@testing-library/react';
+import { RenderHookOptions, RenderHookResult, render, renderHook } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import { AuthenticationContextType, AuthenticationProvider } from '~/accounts/authentication/authentication.context';
@@ -13,6 +13,7 @@ interface Options {
   authInitialState?: Partial<AuthenticationContextType>;
   initialEntries?: string[];
   renderHookOptions?: RenderHookOptions<unknown>;
+  queryClientOptions?: QueryClientConfig;
 }
 
 const queryClientConfig: QueryClientConfig = {
@@ -26,10 +27,10 @@ const queryClientConfig: QueryClientConfig = {
   },
 };
 
-const customRender = <T, P>(ui: ReactElement, options?: Options): RenderResult<T, P> => {
+const customRender = (ui: ReactElement, options?: Options) => {
   const { authInitialState, initialEntries, renderHookOptions } = options ?? {};
 
-  const utils = render(ui, {
+  return render(ui, {
     wrapper: ({ children }: WrapperParams): ReactElement => (
       <MemoryRouter initialEntries={initialEntries ?? ['/']}>
         <QueryClientProvider client={new QueryClient(queryClientConfig)}>
@@ -39,8 +40,6 @@ const customRender = <T, P>(ui: ReactElement, options?: Options): RenderResult<T
     ),
     ...renderHookOptions,
   });
-
-  return utils as RenderResult<T, P>;
 };
 
 /**
@@ -52,11 +51,16 @@ const customRender = <T, P>(ui: ReactElement, options?: Options): RenderResult<T
  * @returns - object, see here for shape: https://react-hooks-testing-library.com/reference/api#renderhook-result
  */
 const customRenderHook = <T, P>(callback: () => unknown, options?: Options): RenderHookResult<T, P> => {
-  const { authInitialState, initialEntries, renderHookOptions } = options ?? {};
+  const { authInitialState, initialEntries, renderHookOptions, queryClientOptions } = options ?? {};
+
+  const config = {
+    ...queryClientConfig,
+    ...queryClientOptions,
+  };
 
   const wrapper = ({ children }: WrapperParams): ReactElement => (
     <MemoryRouter initialEntries={initialEntries ?? ['/']}>
-      <QueryClientProvider client={new QueryClient(queryClientConfig)}>
+      <QueryClientProvider client={new QueryClient(config)}>
         <AuthenticationProvider initialState={authInitialState}>{children}</AuthenticationProvider>
       </QueryClientProvider>
     </MemoryRouter>

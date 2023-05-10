@@ -1,6 +1,10 @@
+/*eslint import/namespace: ["off"]*/
 import { ReactNode } from 'react';
+
 import { describe, expect, it } from 'vitest';
-import { act, renderHook, waitFor, screen } from '~/test/utils';
+
+import { act, renderHook, screen, waitFor } from '~/test/utils';
+
 import { AuthenticationProvider } from './authentication.context';
 import { useAuthentication } from './authentication.hook';
 

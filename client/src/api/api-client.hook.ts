@@ -3,16 +3,13 @@ import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useAuthentication } from '~/accounts/authentication/authentication.hook';
-import { useLogout } from '~/accounts/authentication/logout.hook';
 import { useRefresh } from '~/accounts/authentication/refresh.hook';
 
-import { UNAUTHENTICATED_ERROR_MESSAGE, UNAUTHORIZED_ERROR } from './api.constants';
+import { UNAUTHORIZED_ERROR } from './api.constants';
 
 export const useApiClient = () => {
   const { accessToken } = useAuthentication();
-  const { refetch: logout } = useLogout();
   const { refetch: refresh } = useRefresh();
-  const navigate = useNavigate();
 
   return useCallback(
     async (
@@ -21,16 +18,6 @@ export const useApiClient = () => {
       customHeaders: HeadersInit = {},
       config: Record<string, unknown> = {},
     ) => {
-      // const headers = {};
-
-      // if (accessToken) {
-      //   headers.Authorization = `Bearer ${accessToken}`;
-      // }
-
-      // if (data) {
-      //   headers['Content-Type'] = 'application/json';
-      // }
-
       const method = config?.method as string;
 
       const customConfig: RequestInit = {
@@ -40,11 +27,11 @@ export const useApiClient = () => {
         headers: {
           Authorization: accessToken ? `Bearer ${accessToken}` : undefined,
           'Content-Type': 'application/json',
-          // 'Content-Type': data ? 'application/json' : undefined,
           ...customHeaders,
         },
         ...config,
       };
+
       let response = await fetch(endpoint, customConfig);
 
       const previousRequest = customConfig;

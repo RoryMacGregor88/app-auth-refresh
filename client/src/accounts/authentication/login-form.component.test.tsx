@@ -9,35 +9,11 @@ import {
 import { LoginForm, LoginUser } from '~/accounts/authentication/login-form.component';
 import { render, screen, userEvent, waitFor } from '~/test/utils';
 
-const requiredMessages = {
-  email: EMAIL_REQUIRED_MESSAGE,
-  password: PASSWORD_REQUIRED_MESSAGE,
-};
-
 let loginUser: LoginUser;
 
 describe('Login Form', () => {
   beforeEach(() => {
     loginUser = vi.fn();
-  });
-
-  it('should successfully log user in', async () => {
-    render(<LoginForm error={null} loginUser={loginUser} />);
-
-    const email = 'test@email.com';
-    const password = '123456';
-
-    await userEvent.type(screen.getByRole('textbox', { name: 'email' }), email);
-    await userEvent.type(screen.getByLabelText('password'), password);
-
-    const submitButton = screen.getByRole('button', { name: 'Login' });
-    expect(submitButton).toBeEnabled();
-
-    userEvent.click(submitButton);
-
-    await waitFor(() => {
-      expect(loginUser).toHaveBeenCalledWith({ email, password });
-    });
   });
 
   it('should disable submit button if form is not dirty', () => {
@@ -52,25 +28,40 @@ describe('Login Form', () => {
     const email = 'invalid email';
     const password = '123456';
 
-    await userEvent.type(screen.getByRole('textbox', { name: 'email' }), email);
-    await userEvent.type(screen.getByLabelText('password'), password);
+    await userEvent.type(screen.getByRole('textbox', { name: 'Email * :' }), email);
+    await userEvent.type(screen.getByTestId('password'), password);
 
-    const submitButton = screen.getByRole('button', { name: 'Login' });
-
-    expect(submitButton).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Login' })).toBeDisabled();
+    expect(screen.getByText(INVALID_EMAIL_MESSAGE)).toBeInTheDocument();
   });
 
-  it.each(['email', 'password'])('should show error if %s field is empty', async name => {
+  it('should show error if email field is empty', async () => {
     render(<LoginForm error={null} loginUser={loginUser} />);
 
-    const submitButton = screen.getByRole('button', { name: 'Register' });
+    const password = '123456';
 
-    expect(submitButton).toBeDisabled();
+    await userEvent.type(screen.getByTestId('password'), password);
 
-    userEvent.click(submitButton);
+    userEvent.click(screen.getByRole('button', { name: 'Login' }));
 
     await waitFor(() => {
-      expect(screen.getByText(requiredMessages[name])).toBeInTheDocument();
+      expect(screen.getByText(EMAIL_REQUIRED_MESSAGE)).toBeInTheDocument();
+    });
+
+    expect(loginUser).not.toHaveBeenCalled();
+  });
+
+  it('should show error if password field is empty', async () => {
+    render(<LoginForm error={null} loginUser={loginUser} />);
+
+    const email = 'test@email.com';
+
+    await userEvent.type(screen.getByRole('textbox', { name: 'Email * :' }), email);
+
+    userEvent.click(screen.getByRole('button', { name: 'Login' }));
+
+    await waitFor(() => {
+      expect(screen.getByText(PASSWORD_REQUIRED_MESSAGE)).toBeInTheDocument();
     });
 
     expect(loginUser).not.toHaveBeenCalled();
@@ -82,5 +73,24 @@ describe('Login Form', () => {
     render(<LoginForm error={{ message }} loginUser={loginUser} />);
 
     expect(screen.getByText(message)).toBeInTheDocument();
+  });
+
+  it('should successfully log user in', async () => {
+    render(<LoginForm error={null} loginUser={loginUser} />);
+
+    const email = 'test@email.com';
+    const password = '123456';
+
+    await userEvent.type(screen.getByRole('textbox', { name: 'Email * :' }), email);
+    await userEvent.type(screen.getByTestId('password'), password);
+
+    const submitButton = screen.getByRole('button', { name: 'Login' });
+    expect(submitButton).toBeEnabled();
+
+    userEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(loginUser).toHaveBeenCalledWith({ email, password });
+    });
   });
 });

@@ -7,3 +7,5 @@ export const HTTP_FORBIDDEN = 403;
 export const HTTP_NOT_FOUND = 404;
 
 export const UNAUTHENTICATED_ERROR_MESSAGE = 'Please re-authenticate';
+
+export const LOADING_MESSAGE = 'Loading...';

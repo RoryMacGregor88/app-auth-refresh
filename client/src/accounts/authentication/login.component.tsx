@@ -1,24 +1,17 @@
-import { FC, ReactElement, useEffect, useState } from 'react';
+import { FC, ReactElement, useEffect } from 'react';
 
-import { ErrorBoundary } from 'react-error-boundary';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useUser } from '~/accounts/users/user.hook';
-import { ErrorFallback, errorHandler } from '~/components/error-fallback.component';
 import { FormWrapper } from '~/components/forms/form-wrapper.component';
-import { useCreateErrorReport } from '~/error-reporting/error-report.hook';
-import { ServerError } from '~/types';
+import { Well } from '~/components/well.component';
 
 import { LoginForm } from './login-form.component';
 import { LoginFormType, useLogin } from './login.hook';
 
-const HOME_URL = '/';
-const LOGIN_URL = '/login';
-
 export const Login: FC = (): ReactElement => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [serverError, setServerError] = useState<ServerError | null>(null);
 
   const {
     mutate: login,
@@ -43,22 +36,15 @@ export const Login: FC = (): ReactElement => {
     }
   }, [location, navigate, user]);
 
-  useEffect(() => {
-    if (isLoginError) {
-      setServerError({ message: String(loginError) });
-    }
-  }, [isLoginError, loginError]);
-
   const onLogin = (form: LoginFormType) => {
     login(form);
   };
 
   return (
     <FormWrapper>
-      <>
-        <h1 className="offscreen">Login</h1>
-        <LoginForm error={serverError} loginUser={onLogin} />
-      </>
+      {isLoginError ? <Well message={String(loginError)} /> : null}
+      <h1 className="offscreen">Login</h1>
+      <LoginForm loginUser={onLogin} />
     </FormWrapper>
   );
 };

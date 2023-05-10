@@ -34,7 +34,7 @@ describe('API Client', () => {
       expect(response).toEqual(mockResult);
     });
 
-    it.only('should return an error response for the GET function', async () => {
+    it('should return an error response for the GET function', async () => {
       const mockError = { message: 'Test Error' };
       server.use(
         rest.get(`*/${endpoint}`, async (req, res, ctx) => {

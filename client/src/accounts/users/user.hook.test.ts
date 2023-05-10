@@ -20,26 +20,21 @@ const testUser = {
   roles: [123, 456],
 };
 
+interface Result {
+  id: number;
+  error?: { message: string };
+  mutate: (form: Record<string, unknown>) => void;
+  isError: boolean;
+  isSuccess: boolean;
+  data?: Record<string, unknown>;
+  status: string;
+}
+
 describe('useUser', () => {
-  it('should return user data', async () => {
-    server.use(rest.get(ENDPOINT, (req, res, ctx) => res(ctx.status(HTTP_OK), ctx.json(testUser))));
-
-    const { result } = await renderHook(() => useUser(), {
-      authInitialState: {
-        userId: TEST_USER_ID,
-        accessToken: TEST_ACCESS_TOKEN,
-      },
-    });
-
-    await act(() => expect(result.current.isSuccess).toBe(true));
-
-    expect(result.current.data).toEqual(testUser);
-  });
-
   it('should not fire queryFn if user id not present in state', async () => {
     server.use(rest.get(ENDPOINT, (req, res, ctx) => res(ctx.status(HTTP_OK), ctx.json(testUser))));
 
-    const { result } = await renderHook(() => useUser(), {
+    const { result } = await renderHook<Result, unknown>(() => useUser(), {
       authInitialState: {
         userId: undefined,
         accessToken: TEST_ACCESS_TOKEN,
@@ -54,7 +49,7 @@ describe('useUser', () => {
   it('should not fire queryFn if access token not present in state', async () => {
     server.use(rest.get(ENDPOINT, (req, res, ctx) => res(ctx.status(HTTP_OK), ctx.json(testUser))));
 
-    const { result } = await renderHook(() => useUser(), {
+    const { result } = await renderHook<Result, unknown>(() => useUser(), {
       authInitialState: {
         userId: TEST_USER_ID,
         accessToken: undefined,
@@ -66,12 +61,12 @@ describe('useUser', () => {
     expect(result.current.data).toBeNull();
   });
 
-  it.only('should set isError true and populate error property', async () => {
+  it('should set isError true and populate error property', async () => {
     const testError = { message: 'test-error-message' };
 
     server.use(rest.get(ENDPOINT, (req, res, ctx) => res(ctx.status(SERVER_ERROR), ctx.json(testError))));
 
-    const { result } = await renderHook(() => useUser(), {
+    const { result } = await renderHook<Result, unknown>(() => useUser(), {
       authInitialState: {
         userId: TEST_USER_ID,
         accessToken: TEST_ACCESS_TOKEN,
@@ -85,5 +80,20 @@ describe('useUser', () => {
     await waitFor(() => {
       expect(result.current.error).toEqual(testError.message);
     });
+  });
+
+  it('should return user data', async () => {
+    server.use(rest.get(ENDPOINT, (req, res, ctx) => res(ctx.status(HTTP_OK), ctx.json(testUser))));
+
+    const { result } = await renderHook<Result, unknown>(() => useUser(), {
+      authInitialState: {
+        userId: TEST_USER_ID,
+        accessToken: TEST_ACCESS_TOKEN,
+      },
+    });
+
+    await act(() => expect(result.current.isSuccess).toBe(true));
+
+    expect(result.current.data).toEqual(testUser);
   });
 });

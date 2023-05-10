@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 
 import { useApiClient } from '~/api/api-client.hook';
-// import { User } from '~/mocks/handlers/authentication';
 
 import { useAuthentication } from './authentication.hook';
 
@@ -18,8 +17,6 @@ export const LoginFormSchema = z.object({
 export type LoginFormType = z.infer<typeof LoginFormSchema>;
 
 export const useLogin = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
   const { setUserId, setAccessToken } = useAuthentication();
   const apiClient = useApiClient();
 

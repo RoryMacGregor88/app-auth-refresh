@@ -72,24 +72,23 @@ describe('useApiClient', () => {
     }
   });
 
-  it.each([SERVER_ERROR, HTTP_FORBIDDEN, HTTP_BAD_REQUEST])(
-    'should reject promise for %s error responses',
-    async status => {
-      const message = 'test-error-message';
+  it.each([
+    { status: SERVER_ERROR, message: 'Server error' },
+    { status: HTTP_FORBIDDEN, message: 'Forbidden error' },
+    { status: HTTP_BAD_REQUEST, message: 'Bad request error' },
+  ])('should reject promise for %s error responses', async ({ status, message }) => {
+    server.use(rest.post(ENDPOINT, (req, res, ctx) => res(ctx.status(status), ctx.json({ message }))));
 
-      server.use(rest.post(ENDPOINT, (req, res, ctx) => res(ctx.status(status), ctx.json({ message }))));
+    const { result } = renderHook(() => useApiClient());
 
-      const { result } = renderHook(() => useApiClient());
+    const asyncCallback = result.current as (endpoint: string) => Promise<void>;
 
-      const asyncCallback = result.current as (endpoint: string) => Promise<void>;
-
-      try {
-        await asyncCallback(ENDPOINT);
-      } catch (error) {
-        expect(error).toEqual({ message });
-      }
-    },
-  );
+    try {
+      await asyncCallback(ENDPOINT);
+    } catch (error) {
+      expect(error).toEqual({ message });
+    }
+  });
 
   it('should make a successful network request', async () => {
     const responseData = { username: 'John Smith' };
