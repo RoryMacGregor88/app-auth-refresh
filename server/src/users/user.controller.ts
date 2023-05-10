@@ -67,7 +67,7 @@ export const createUser = async (req: Request, res: Response) => {
       lastName: lastName ?? '',
     });
 
-    res.status(CREATED).json({
+    res.sendStatus(CREATED).json({
       id: result._id,
     });
   } catch (error) {
