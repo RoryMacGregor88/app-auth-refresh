@@ -29,7 +29,7 @@ describe('useLogin', () => {
     setUserId = vi.fn();
   });
 
-  it.only('should throw an error if any fields are missing', async () => {
+  it('should throw an error if any fields are missing', async () => {
     const userConfig = { id: '123', accessToken: '456' };
 
     server.use(rest.post(ENDPOINT, (req, res, ctx) => res(ctx.status(200), ctx.json(userConfig))));
