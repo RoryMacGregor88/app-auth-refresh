@@ -1,11 +1,13 @@
 /*eslint import/namespace: ["off"]*/
+import { Dispatch } from 'react';
+
 import { describe, expect, it } from 'vitest';
 
-import { HTTP_BAD_REQUEST, HTTP_OK } from '~/api/api.constants';
+import { HTTP_BAD_REQUEST, HTTP_FORBIDDEN, HTTP_OK, SERVER_ERROR } from '~/api/api.constants';
 import { rest, server } from '~/mocks/server';
 import { act, renderHook, waitFor } from '~/test/utils';
 
-import { useLogin } from './login.hook';
+import { UserConfigType, useLogin } from './login.hook';
 
 const ENDPOINT = '*/api/accounts/';
 
@@ -18,54 +20,84 @@ interface Result {
   current: Record<string, unknown>;
 }
 
-describe('useLoginHook', () => {
-  it('should throw an error for an unknown user', async () => {
-    const loginData = { email: 'bob@example.com', password: 'otherpassword', accessToken: 'foobar' };
-    const errorMessage = 'User not found';
-    server.use(rest.post(ENDPOINT, (req, res, ctx) => res(ctx.status(200), ctx.json({ message: errorMessage }))));
-    const { result } = renderHook<Result, unknown>(() => useLogin());
+let setAccessToken: Dispatch<string | null>;
+let setUserId: Dispatch<string | null>;
 
-    act(() => {
-      result.current.mutate(loginData);
-    });
-    await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(result.current.data.message).toBe(errorMessage);
-    console.log('result', JSON.stringify(result, null, 2));
+describe('useLogin', () => {
+  beforeEach(() => {
+    setAccessToken = vi.fn();
+    setUserId = vi.fn();
   });
 
-  it('should throw an error for an known user with wrong password', async () => {
-    const loginForm = { email: 'john@example.com', password: 'otherpassword', accessToken: 'foobar' };
-    const errorMessage = 'Incorrect Password';
-    server.use(
-      rest.post(ENDPOINT, (req, res, ctx) => res(ctx.status(HTTP_BAD_REQUEST), ctx.json({ message: errorMessage }))),
-    );
-    const { result } = renderHook<Result, unknown>(() => useLogin());
+  it.only('should throw an error if any fields are missing', async () => {
+    const userConfig = { id: '123', accessToken: '456' };
+
+    server.use(rest.post(ENDPOINT, (req, res, ctx) => res(ctx.status(200), ctx.json(userConfig))));
+
+    const loginForm = { email: 'john@example.com' };
+
+    const { result } = renderHook<Result, unknown>(() => useLogin(), {
+      authInitialState: { setAccessToken, setUserId },
+    });
 
     await act(() => result.current.mutate(loginForm));
 
     await waitFor(() => expect(result.current.isError).toBe(true));
-    console.log('result', JSON.stringify(result, null, 2));
-  });
 
-  it('should return data if credentials are correct', async () => {
-    const loginData = { email: 'john@example.com', password: 'mypassword' };
-    const { result } = renderHook<Result, unknown>(() => useLogin());
-
-    const mockResponse = {
-      email: 'john@example.com',
-      firstName: 'John',
-      id: 1,
-      lastName: 'Smith',
-      password: 'mypassword',
-      roles: [1, 3],
+    const validationError = {
+      errors: [
+        {
+          code: 'invalid_type',
+          expected: 'string',
+          received: 'undefined',
+          path: ['password'],
+          message: 'Required',
+        },
+      ],
     };
 
-    server.use(rest.post(ENDPOINT, (req, res, ctx) => res(ctx.status(HTTP_OK), ctx.json(mockResponse))));
+    expect(result.current.error).toEqual(expect.objectContaining(validationError));
+  });
 
-    act(() => {
-      result.current.mutate(loginData);
+  it.each([
+    { status: SERVER_ERROR, message: 'Server error' },
+    { status: HTTP_FORBIDDEN, message: 'Forbidden error' },
+    { status: HTTP_BAD_REQUEST, message: 'Bad request error' },
+  ])('should reject promise for %s error responses', async ({ status, message }) => {
+    const loginForm = { email: 'john@example.com', password: 'otherpassword', accessToken: 'foobar' };
+
+    server.use(rest.post(ENDPOINT, (req, res, ctx) => res(ctx.status(status), ctx.json({ message }))));
+
+    const { result } = renderHook<Result, unknown>(() => useLogin(), {
+      authInitialState: { setAccessToken, setUserId },
     });
 
+    await act(() => result.current.mutate(loginForm));
+
+    await waitFor(() => expect(result.current.isError).toBe(true));
+
+    expect(result.current.error).toStrictEqual({ message });
+    expect(setUserId).not.toHaveBeenCalled();
+    expect(setAccessToken).not.toHaveBeenCalled();
+  });
+
+  it('should make a successful request', async () => {
+    const loginData = { email: 'john@example.com', password: 'mypassword' };
+
+    const { result } = renderHook<Result, unknown>(() => useLogin(), {
+      authInitialState: { setAccessToken, setUserId },
+    });
+
+    const userConfig: UserConfigType = { accessToken: '123', id: '456' };
+
+    server.use(rest.post(ENDPOINT, (req, res, ctx) => res(ctx.status(HTTP_OK), ctx.json(userConfig))));
+
+    act(() => result.current.mutate(loginData));
+
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+    expect(result.current.data).toStrictEqual(userConfig);
+    expect(setUserId).toHaveBeenCalledWith(userConfig.id);
+    expect(setAccessToken).toHaveBeenCalledWith(userConfig.accessToken);
   });
 });
