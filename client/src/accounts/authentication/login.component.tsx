@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useUser } from '~/accounts/users/user.hook';
 import { FormWrapper } from '~/components/forms/form-wrapper.component';
+import { Loadmask } from '~/components/loadmask.component';
 import { Well } from '~/components/well.component';
 
 import { LoginForm } from './login-form.component';
@@ -13,21 +14,9 @@ export const Login: FC = (): ReactElement => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const {
-    mutate: login,
-    data: userInfo,
-    error: loginError,
-    isError: isLoginError,
-    isLoading: isLoginLoading,
-  } = useLogin();
+  const { isError: isLoginError, error: loginError, isLoading: isLoginLoading, mutate: login } = useLogin();
 
-  const {
-    data: user,
-    error: userError,
-    isError: isUserError,
-    isLoading: isUserLoading,
-    isSuccess: isUserSuccess,
-  } = useUser();
+  const { isError: isUserError, error: userError, data: user, isLoading: isUserLoading } = useUser();
 
   useEffect(() => {
     if (user) {
@@ -40,9 +29,12 @@ export const Login: FC = (): ReactElement => {
     login(form);
   };
 
-  return (
+  return isLoginLoading || isUserLoading ? (
+    <Loadmask />
+  ) : (
     <FormWrapper>
       {isLoginError ? <Well message={String(loginError)} /> : null}
+      {isUserError ? <Well message={String(userError)} /> : null}
       <h1 className="offscreen">Login</h1>
       <LoginForm loginUser={onLogin} />
     </FormWrapper>

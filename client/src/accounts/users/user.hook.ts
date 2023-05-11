@@ -1,11 +1,14 @@
 import { UseQueryResult, useQuery } from '@tanstack/react-query';
 
+import { useApiClient } from '~/api/api-client.hook';
+
 import { User, UserData } from './users.hook';
 import { useAuthentication } from '../authentication/authentication.hook';
 
 const ENDPOINT = `${import.meta.env.VITE_API_URL}/api/users`;
 
 export const useUser = (): UseQueryResult<User> => {
+  const apiClient = useApiClient();
   const { userId, setUser, accessToken } = useAuthentication();
 
   return useQuery({
@@ -13,23 +16,12 @@ export const useUser = (): UseQueryResult<User> => {
     placeholderData: null,
     queryKey: ['User', userId],
     queryFn: async () => {
-      const response = await fetch(`${ENDPOINT}/${userId}`, {
-        credentials: 'include',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      const user = await apiClient(`${ENDPOINT}/${userId}`, null, {}, { method: 'GET' });
 
-      if (!response.ok) {
-        const error = await response.json();
-        return Promise.reject(new Error(error.message));
-      }
+      const parsedUser = UserData.parse(user);
 
-      const data: User = await response.json();
-
-      setUser(data);
-
-      return UserData.parse(data);
+      setUser(parsedUser);
+      return parsedUser;
     },
   });
 };

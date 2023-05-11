@@ -77,6 +77,7 @@ describe('useLogin', () => {
     await waitFor(() => expect(result.current.isError).toBe(true));
 
     expect(result.current.error).toStrictEqual({ message });
+
     expect(setUserId).not.toHaveBeenCalled();
     expect(setAccessToken).not.toHaveBeenCalled();
   });
@@ -97,6 +98,7 @@ describe('useLogin', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     expect(result.current.data).toStrictEqual(userConfig);
+
     expect(setUserId).toHaveBeenCalledWith(userConfig.id);
     expect(setAccessToken).toHaveBeenCalledWith(userConfig.accessToken);
   });

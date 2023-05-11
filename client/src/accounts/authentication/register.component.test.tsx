@@ -12,7 +12,7 @@ const ENDPOINT = 'http://localhost:5000/api/accounts/register/';
 
 describe('Register', () => {
   it('should show loadmask when isLoading is true', () => {
-    render(<Register />, { mutationDefaults: { key: ['Register'], defaultValue: { isLoading: true } } });
+    render(<Register />);
 
     expect(screen.getByText(LOADING_MESSAGE)).toBeInTheDocument();
   });

@@ -28,12 +28,17 @@ const queryClientConfig: QueryClientConfig = {
 };
 
 const customRender = (ui: ReactElement, options?: Options) => {
-  const { authInitialState, initialEntries, renderHookOptions } = options ?? {};
+  const { authInitialState, initialEntries, renderHookOptions, queryClientOptions } = options ?? {};
+
+  const config = {
+    ...queryClientConfig,
+    ...queryClientOptions,
+  };
 
   return render(ui, {
     wrapper: ({ children }: WrapperParams): ReactElement => (
       <MemoryRouter initialEntries={initialEntries ?? ['/']}>
-        <QueryClientProvider client={new QueryClient(queryClientConfig)}>
+        <QueryClientProvider client={new QueryClient(config)}>
           <AuthenticationProvider initialState={authInitialState ?? {}}>{children}</AuthenticationProvider>
         </QueryClientProvider>
       </MemoryRouter>

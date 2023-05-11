@@ -17,13 +17,13 @@ describe('Login Form', () => {
   });
 
   it('should disable submit button if form is not dirty', () => {
-    render(<LoginForm error={null} loginUser={loginUser} />);
+    render(<LoginForm loginUser={loginUser} />);
 
     expect(screen.getByRole('button', { name: 'Login' })).toBeDisabled();
   });
 
   it('should disable submit button if form is invalid', async () => {
-    render(<LoginForm error={null} loginUser={loginUser} />);
+    render(<LoginForm loginUser={loginUser} />);
 
     const email = 'invalid email';
     const password = '123456';
@@ -36,7 +36,7 @@ describe('Login Form', () => {
   });
 
   it('should show error if email field is empty', async () => {
-    render(<LoginForm error={null} loginUser={loginUser} />);
+    render(<LoginForm loginUser={loginUser} />);
 
     const password = '123456';
 
@@ -52,7 +52,7 @@ describe('Login Form', () => {
   });
 
   it('should show error if password field is empty', async () => {
-    render(<LoginForm error={null} loginUser={loginUser} />);
+    render(<LoginForm loginUser={loginUser} />);
 
     const email = 'test@email.com';
 
@@ -67,16 +67,8 @@ describe('Login Form', () => {
     expect(loginUser).not.toHaveBeenCalled();
   });
 
-  it('should display error well if error is present', async () => {
-    const message = 'test-error-message';
-
-    render(<LoginForm error={{ message }} loginUser={loginUser} />);
-
-    expect(screen.getByText(message)).toBeInTheDocument();
-  });
-
   it('should successfully log user in', async () => {
-    render(<LoginForm error={null} loginUser={loginUser} />);
+    render(<LoginForm loginUser={loginUser} />);
 
     const email = 'test@email.com';
     const password = '123456';
