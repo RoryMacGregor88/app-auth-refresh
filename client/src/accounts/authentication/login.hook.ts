@@ -27,9 +27,7 @@ export const useLogin = () => {
   const apiClient = useApiClient();
 
   return useMutation(async (form: LoginFormType): Promise<UserConfigType> => {
-    const parsedForm = LoginFormSchema.parse(form);
-
-    const data = await apiClient(ENDPOINT, parsedForm);
+    const data = await apiClient(ENDPOINT, form);
 
     const parsedData = UserConfigSchema.parse(data);
 

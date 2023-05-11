@@ -20,37 +20,6 @@ interface Result {
 }
 
 describe('useRegister', () => {
-  it('should throw an error if any fields are missing', async () => {
-    server.use(rest.post(ENDPOINT, (req, res, ctx) => res(ctx.status(HTTP_BAD_REQUEST), ctx.json({}))));
-
-    const registerForm: Partial<RegistrationFormType> = {
-      email: 'bob@example.com',
-      lastName: 'Ross',
-      password: 'otherpassword',
-      confirmPassword: 'otherpassword',
-    };
-
-    const { result } = renderHook<Result, RegistrationFormType>(() => useRegister());
-
-    act(() => result.current.mutate(registerForm));
-
-    await waitFor(() => expect(result.current.isError).toBe(true));
-
-    const validationError = {
-      errors: [
-        {
-          code: 'invalid_type',
-          expected: 'string',
-          received: 'undefined',
-          path: ['firstName'],
-          message: 'Required',
-        },
-      ],
-    };
-
-    expect(result.current.error).toEqual(expect.objectContaining(validationError));
-  });
-
   it.each([
     { status: SERVER_ERROR, message: 'Server error' },
     { status: HTTP_FORBIDDEN, message: 'Forbidden error' },

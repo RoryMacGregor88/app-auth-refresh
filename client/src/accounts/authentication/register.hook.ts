@@ -22,9 +22,7 @@ export const useRegister = () => {
   const apiClient = useApiClient();
 
   return useMutation(async (form: RegistrationFormType) => {
-    const parsedForm = RegistrationFormSchema.parse(form);
-
-    const data: RegistrationResponseType = await apiClient(ENDPOINT, parsedForm);
+    const data: RegistrationResponseType = await apiClient(ENDPOINT, form);
 
     return RegistrationResponseSchema.parse(data);
   });

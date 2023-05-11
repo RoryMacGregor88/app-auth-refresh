@@ -29,36 +29,6 @@ describe('useLogin', () => {
     setUserId = vi.fn();
   });
 
-  it('should throw an error if any fields are missing', async () => {
-    const userConfig = { id: '123', accessToken: '456' };
-
-    server.use(rest.post(ENDPOINT, (req, res, ctx) => res(ctx.status(200), ctx.json(userConfig))));
-
-    const loginForm = { email: 'john@example.com' };
-
-    const { result } = renderHook<Result, unknown>(() => useLogin(), {
-      authInitialState: { setAccessToken, setUserId },
-    });
-
-    await act(() => result.current.mutate(loginForm));
-
-    await waitFor(() => expect(result.current.isError).toBe(true));
-
-    const validationError = {
-      errors: [
-        {
-          code: 'invalid_type',
-          expected: 'string',
-          received: 'undefined',
-          path: ['password'],
-          message: 'Required',
-        },
-      ],
-    };
-
-    expect(result.current.error).toEqual(expect.objectContaining(validationError));
-  });
-
   it.each([
     { status: SERVER_ERROR, message: 'Server error' },
     { status: HTTP_FORBIDDEN, message: 'Forbidden error' },
