@@ -19,7 +19,7 @@ export const Register: FC = (): ReactElement => {
     <Loadmask />
   ) : (
     <FormWrapper>
-      {isError ? <Well message={String(error)} status="error" /> : null}
+      {isError ? <Well message={String(error?.message)} status="error" /> : null}
       {data ? <Well message={ACCOUNT_CREATED_SUCCESS_MESSAGE} status="success" /> : null}
 
       <h1 className="offscreen">Register</h1>

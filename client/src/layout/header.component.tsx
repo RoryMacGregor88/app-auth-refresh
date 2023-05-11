@@ -21,6 +21,8 @@ export const Header: FC = (): ReactElement => {
   const { user } = useAuthentication();
   const { refetch: logout } = useLogout();
 
+  console.log('User: ', user);
+
   const [explode, setExplode] = useState(false);
 
   const handleErrorReport = (error: Error) => {

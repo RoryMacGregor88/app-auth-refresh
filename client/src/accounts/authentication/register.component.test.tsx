@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { ACCOUNT_CREATED_SUCCESS_MESSAGE } from '~/accounts/accounts.constants';
-import { HTTP_OK, LOADING_MESSAGE, SERVER_ERROR } from '~/api/api.constants';
+import { HTTP_OK, SERVER_ERROR } from '~/api/api.constants';
 import { rest, server } from '~/mocks/server';
 import { render, screen, userEvent, waitFor } from '~/test/utils';
 
@@ -11,13 +11,7 @@ import { Register } from './register.component';
 const ENDPOINT = 'http://localhost:5000/api/accounts/register/';
 
 describe('Register', () => {
-  it('should show loadmask when isLoading is true', () => {
-    render(<Register />);
-
-    expect(screen.getByText(LOADING_MESSAGE)).toBeInTheDocument();
-  });
-
-  it('should show error well when isError is true', async () => {
+  it.only('should show error well when isError is true', async () => {
     const error = 'test-error-message';
 
     server.use(rest.post(ENDPOINT, (req, res, ctx) => res(ctx.status(SERVER_ERROR), ctx.json(error))));

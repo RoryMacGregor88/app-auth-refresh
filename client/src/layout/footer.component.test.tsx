@@ -1,5 +1,4 @@
-import React from 'react';
-
+/*eslint import/namespace: ["off"]*/
 import { describe, expect, it } from 'vitest';
 
 import { render, screen } from '~/test/utils';

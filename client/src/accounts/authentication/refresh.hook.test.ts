@@ -57,8 +57,6 @@ describe('useRefresh', () => {
     });
   });
 
-  // TODO: below two tests are behaving unusually
-
   it('should reject promise for other error responses', async () => {
     server.use(rest.get(REFRESH_ENDPOINT, (req, res, ctx) => res(ctx.status(SERVER_ERROR), ctx.json({}))));
 
@@ -67,7 +65,7 @@ describe('useRefresh', () => {
     await act(() => result.current.refetch());
 
     await waitFor(() => {
-      return expect(result.current.isError).toBe(true);
+      expect(result.current.isError).toBe(true);
     });
 
     expect(result.current.error.message).toEqual(UNAUTHENTICATED_ERROR_MESSAGE);

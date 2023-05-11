@@ -1,7 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { StoryWrapper } from '~/stories/utils';
-
 import { Header } from './header.component';
 
 const meta = {
@@ -10,13 +8,6 @@ const meta = {
   parameters: {
     layout: 'fullscreen',
   },
-  decorators: [
-    Story => (
-      <StoryWrapper>
-        <Story />
-      </StoryWrapper>
-    ),
-  ],
 } satisfies Meta<typeof Header>;
 
 export default meta;

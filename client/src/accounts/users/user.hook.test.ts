@@ -22,7 +22,7 @@ const testUser = {
 
 interface Result {
   id: number;
-  error?: { message: string };
+  error: Error;
   mutate: (form: Record<string, unknown>) => void;
   isError: boolean;
   isSuccess: boolean;
@@ -62,9 +62,9 @@ describe('useUser', () => {
   });
 
   it('should set isError true and populate error property', async () => {
-    const testError = { message: 'test-error-message' };
+    const message = 'test-error-message';
 
-    server.use(rest.get(ENDPOINT, (req, res, ctx) => res(ctx.status(SERVER_ERROR), ctx.json(testError))));
+    server.use(rest.get(ENDPOINT, (req, res, ctx) => res(ctx.status(SERVER_ERROR), ctx.json(message))));
 
     const { result } = await renderHook<Result, unknown>(() => useUser(), {
       authInitialState: {
@@ -78,7 +78,7 @@ describe('useUser', () => {
     });
 
     await waitFor(() => {
-      expect(result.current.error).toEqual(testError.message);
+      expect(result.current.error.message).toEqual(message);
     });
   });
 

@@ -33,8 +33,8 @@ export const Login: FC = (): ReactElement => {
     <Loadmask />
   ) : (
     <FormWrapper>
-      {isLoginError ? <Well message={String(loginError)} /> : null}
-      {isUserError ? <Well message={String(userError)} /> : null}
+      {isLoginError ? <Well message={String(loginError.message)} /> : null}
+      {isUserError ? <Well message={String(userError.message)} /> : null}
       <h1 className="offscreen">Login</h1>
       <LoginForm loginUser={onLogin} />
     </FormWrapper>
