@@ -14,7 +14,7 @@ const Bomb = () => {
   throw new Error('💥 BADABOOM 💥');
 };
 
-const Header: FC = (): ReactElement => {
+export const Header: FC = (): ReactElement => {
   const { mutate, data: report, error: failure, isError, isSuccess } = useCreateErrorReport();
 
   const { t } = useTranslation();
@@ -71,5 +71,3 @@ const Header: FC = (): ReactElement => {
     </header>
   );
 };
-
-export default Header;

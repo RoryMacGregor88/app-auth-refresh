@@ -1,13 +1,7 @@
-import React from 'react';
-
 import { User } from '~/accounts/authentication/authentication.context';
 
 import { Button } from './Button';
 import './header.css';
-
-// type User = {
-//   name: string;
-// };
 
 interface HeaderProps {
   user?: User;

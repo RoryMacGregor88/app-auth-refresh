@@ -1,18 +1,27 @@
-import React from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
 
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { StoryWrapper } from '~/stories/utils';
 
-import Header from './header.component';
+import { Header } from './header.component';
 
-const Index = {
+const meta = {
   title: 'Components/Header',
   component: Header,
-  parameters: { layout: 'fullscreen' },
-} as ComponentMeta<typeof Header>;
+  parameters: {
+    layout: 'fullscreen',
+  },
+  decorators: [
+    Story => (
+      <StoryWrapper>
+        <Story />
+      </StoryWrapper>
+    ),
+  ],
+} satisfies Meta<typeof Header>;
 
-export default Index;
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-const Template: ComponentStory<typeof Header> = args => <Header {...args} />;
-
-export const Default = Template.bind({});
-Default.args = {};
+export const Primary: Story = {
+  args: {},
+};
