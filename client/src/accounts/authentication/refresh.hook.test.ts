@@ -15,7 +15,7 @@ const REFRESH_ENDPOINT = `${ACCOUNT_ENDPOINT}/refresh`;
 
 interface Result {
   id: number;
-  error?: { message: string };
+  error: Error;
   refetch: () => void;
   isError: boolean;
   isSuccess: boolean;
@@ -57,39 +57,33 @@ describe('useRefresh', () => {
     });
   });
 
+  // TODO: below two tests are behaving unusually
+
   it('should reject promise for other error responses', async () => {
-    server.use(
-      rest.get(REFRESH_ENDPOINT, (req, res, ctx) => {
-        return res(ctx.status(SERVER_ERROR), ctx.json({}));
-      }),
-    );
+    server.use(rest.get(REFRESH_ENDPOINT, (req, res, ctx) => res(ctx.status(SERVER_ERROR), ctx.json({}))));
 
     const { result } = renderHook<Result, unknown>(() => useRefresh());
 
-    const { refetch: refresh, isError, error } = result.current;
+    await act(() => result.current.refetch());
 
-    await act(() => refresh());
+    await waitFor(() => {
+      return expect(result.current.isError).toBe(true);
+    });
 
-    await waitFor(() => expect(isError).toBe(true));
-
-    expect(error).toEqual(UNAUTHENTICATED_ERROR_MESSAGE);
+    expect(result.current.error.message).toEqual(UNAUTHENTICATED_ERROR_MESSAGE);
   });
 
   it('should make successful request', async () => {
     const response = { accessToken: '123' };
 
-    server.use(
-      rest.get(REFRESH_ENDPOINT, (req, res, ctx) => {
-        return res(ctx.status(HTTP_OK), ctx.json(response));
-      }),
-    );
+    server.use(rest.get(REFRESH_ENDPOINT, (req, res, ctx) => res(ctx.status(HTTP_OK), ctx.json(response))));
 
     const { result } = renderHook<Result, unknown>(() => useRefresh(), { authInitialState: { setAccessToken } });
 
     await act(() => result.current.refetch());
 
     await waitFor(() => {
-      expect(result.current.isError).toBe(true);
+      expect(result.current.isSuccess).toBe(true);
     });
 
     const accessToken = result.current.data.accessToken;

@@ -18,6 +18,46 @@ const ENDPOINT = 'http://localhost:3000/test-endpoint';
 const REFRESH_ENDPOINT = 'http://localhost:5000/api/accounts/refresh';
 
 describe('useApiClient', () => {
+  it('should reject promise if refresh request fails', async () => {
+    const message = 'test-error-message';
+
+    /** original endpoint */
+    server.use(rest.post(ENDPOINT, async (req, res, ctx) => res(ctx.status(UNAUTHORIZED_ERROR), ctx.json(message))));
+
+    /** refresh endpoint when original request is unauthorized */
+    server.use(rest.get(REFRESH_ENDPOINT, (req, res, ctx) => res(ctx.status(SERVER_ERROR), ctx.json({}))));
+
+    const { result } = renderHook(() => useApiClient());
+
+    const asyncCallback = result.current as (endpoint: string) => Promise<Error>;
+
+    try {
+      await asyncCallback(ENDPOINT);
+    } catch (e) {
+      const error = e as Error;
+      expect(error.message).toEqual(UNAUTHENTICATED_ERROR_MESSAGE);
+    }
+  });
+
+  it.each([
+    { status: SERVER_ERROR, message: 'Server error' },
+    { status: HTTP_FORBIDDEN, message: 'Forbidden error' },
+    { status: HTTP_BAD_REQUEST, message: 'Bad request error' },
+  ])('should reject promise for %s error responses', async ({ status, message }) => {
+    server.use(rest.post(ENDPOINT, (req, res, ctx) => res(ctx.status(status), ctx.json(message))));
+
+    const { result } = renderHook(() => useApiClient());
+
+    const asyncCallback = result.current as (endpoint: string) => Promise<Error>;
+
+    try {
+      await asyncCallback(ENDPOINT);
+    } catch (e) {
+      const error = e as Error;
+      expect(error.message).toEqual(message);
+    }
+  });
+
   it('should call refresh function and re-fetch if response is unauthorized', async () => {
     const responseData = { username: 'John Smith' };
     const message = 'test-error-message';
@@ -30,7 +70,7 @@ describe('useApiClient', () => {
       rest.post(ENDPOINT, async (req, res, ctx) => {
         if (first) {
           first = false;
-          return res(ctx.status(UNAUTHORIZED_ERROR), ctx.json({ message }));
+          return res(ctx.status(UNAUTHORIZED_ERROR), ctx.json(message));
         } else {
           return res(ctx.status(HTTP_OK), ctx.json(responseData));
         }
@@ -52,42 +92,6 @@ describe('useApiClient', () => {
     await waitFor(() => {
       expect(data).toEqual(responseData);
     });
-  });
-
-  it('should reject promise if refresh request fails', async () => {
-    /** original endpoint */
-    server.use(rest.post(ENDPOINT, async (req, res, ctx) => res(ctx.status(UNAUTHORIZED_ERROR), ctx.json({}))));
-
-    /** refresh endpoint when original request is unauthorized */
-    server.use(rest.get(REFRESH_ENDPOINT, (req, res, ctx) => res(ctx.status(SERVER_ERROR), ctx.json({}))));
-
-    const { result } = renderHook(() => useApiClient());
-
-    const asyncCallback = result.current as (endpoint: string) => Promise<string>;
-
-    try {
-      await asyncCallback(ENDPOINT);
-    } catch (error) {
-      expect(error).toEqual(UNAUTHENTICATED_ERROR_MESSAGE);
-    }
-  });
-
-  it.each([
-    { status: SERVER_ERROR, message: 'Server error' },
-    { status: HTTP_FORBIDDEN, message: 'Forbidden error' },
-    { status: HTTP_BAD_REQUEST, message: 'Bad request error' },
-  ])('should reject promise for %s error responses', async ({ status, message }) => {
-    server.use(rest.post(ENDPOINT, (req, res, ctx) => res(ctx.status(status), ctx.json({ message }))));
-
-    const { result } = renderHook(() => useApiClient());
-
-    const asyncCallback = result.current as (endpoint: string) => Promise<void>;
-
-    try {
-      await asyncCallback(ENDPOINT);
-    } catch (error) {
-      expect(error).toEqual({ message });
-    }
   });
 
   it('should make a successful network request', async () => {

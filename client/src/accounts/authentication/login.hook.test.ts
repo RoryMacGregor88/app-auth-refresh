@@ -16,7 +16,7 @@ interface Result {
   isError: boolean;
   data: Record<string, unknown>;
   mutate: (form: Record<string, unknown>) => void;
-  error: Record<string, unknown>;
+  error: Error;
   current: Record<string, unknown>;
 }
 
@@ -36,7 +36,7 @@ describe('useLogin', () => {
   ])('should reject promise for %s error responses', async ({ status, message }) => {
     const loginForm = { email: 'john@example.com', password: 'otherpassword', accessToken: 'foobar' };
 
-    server.use(rest.post(ENDPOINT, (req, res, ctx) => res(ctx.status(status), ctx.json({ message }))));
+    server.use(rest.post(ENDPOINT, (req, res, ctx) => res(ctx.status(status), ctx.json(message))));
 
     const { result } = renderHook<Result, unknown>(() => useLogin(), {
       authInitialState: { setAccessToken, setUserId },
@@ -46,7 +46,7 @@ describe('useLogin', () => {
 
     await waitFor(() => expect(result.current.isError).toBe(true));
 
-    expect(result.current.error).toStrictEqual({ message });
+    expect(result.current.error.message).toStrictEqual(message);
 
     expect(setUserId).not.toHaveBeenCalled();
     expect(setAccessToken).not.toHaveBeenCalled();
@@ -63,7 +63,7 @@ describe('useLogin', () => {
 
     server.use(rest.post(ENDPOINT, (req, res, ctx) => res(ctx.status(HTTP_OK), ctx.json(userConfig))));
 
-    act(() => result.current.mutate(loginData));
+    await act(() => result.current.mutate(loginData));
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 

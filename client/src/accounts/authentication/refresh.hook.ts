@@ -25,8 +25,7 @@ export const useRefresh = (): UseQueryResult<string> => {
       }
 
       if (!response.ok) {
-        const error = await response.json();
-        return Promise.reject(new Error(error));
+        return Promise.reject(new Error(UNAUTHENTICATED_ERROR_MESSAGE));
       }
 
       const data = await response.json();

@@ -11,7 +11,7 @@ const ENDPOINT = 'http://localhost:5000/api/accounts/register/';
 
 interface Result {
   id: number;
-  error?: { message: string };
+  error: Error;
   mutate: (form: Record<string, unknown>) => void;
   isError: boolean;
   isSuccess: boolean;
@@ -25,7 +25,7 @@ describe('useRegister', () => {
     { status: HTTP_FORBIDDEN, message: 'Forbidden error' },
     { status: HTTP_BAD_REQUEST, message: 'Bad request error' },
   ])('should reject promise for %s error responses', async ({ status, message }) => {
-    server.use(rest.post(ENDPOINT, (req, res, ctx) => res(ctx.status(status), ctx.json({ message }))));
+    server.use(rest.post(ENDPOINT, (req, res, ctx) => res(ctx.status(status), ctx.json(message))));
 
     const registerForm: RegistrationFormType = {
       email: 'bob@example.com',
@@ -37,13 +37,13 @@ describe('useRegister', () => {
 
     const { result } = renderHook<Result, RegistrationFormType>(() => useRegister());
 
-    act(() => result.current.mutate(registerForm));
+    await act(() => result.current.mutate(registerForm));
 
     await waitFor(() => {
       expect(result.current.isError).toBe(true);
     });
 
-    expect(result.current.error).toStrictEqual({ message });
+    expect(result.current.error.message).toStrictEqual(message);
   });
 
   it('should return user id if registration successful', async () => {
@@ -61,7 +61,7 @@ describe('useRegister', () => {
 
     const { result } = renderHook<Result, RegistrationFormType>(() => useRegister());
 
-    act(() => result.current.mutate(registerForm));
+    await act(() => result.current.mutate(registerForm));
 
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);

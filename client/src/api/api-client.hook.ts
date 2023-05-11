@@ -1,7 +1,5 @@
 import { useCallback } from 'react';
 
-import { useNavigate } from 'react-router-dom';
-
 import { useAuthentication } from '~/accounts/authentication/authentication.hook';
 import { useRefresh } from '~/accounts/authentication/refresh.hook';
 
@@ -40,6 +38,7 @@ export const useApiClient = () => {
         const { isError, error, data: newAccessToken } = await refresh();
 
         if (isError) {
+          /** error is already an Error instance, returned from refresh hook */
           return Promise.reject(error);
         }
 
@@ -51,7 +50,7 @@ export const useApiClient = () => {
 
       if (!response.ok) {
         const error = await response.json();
-        return Promise.reject(error);
+        return Promise.reject(new Error(error));
       }
 
       return await response.json();
