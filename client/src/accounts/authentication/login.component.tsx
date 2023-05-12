@@ -14,9 +14,8 @@ export const Login: FC = (): ReactElement => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { isError: isLoginError, error: loginError, isLoading: isLoginLoading, mutate: login } = useLogin();
-
-  const { isError: isUserError, error: userError, data: user, isLoading: isUserLoading } = useUser();
+  const { isError: isLoginError, error: loginQueryError, isLoading: isLoginLoading, mutate: login } = useLogin();
+  const { isError: isUserError, error: userQueryError, data: user, isLoading: isUserLoading } = useUser();
 
   useEffect(() => {
     if (user) {
@@ -29,12 +28,16 @@ export const Login: FC = (): ReactElement => {
     login(form);
   };
 
+  const loginError = loginQueryError as Error;
+  const userError = userQueryError as Error;
+
   return isLoginLoading || isUserLoading ? (
     <Loadmask />
   ) : (
     <FormWrapper>
-      {isLoginError ? <Well message={String(loginError.message)} /> : null}
-      {isUserError ? <Well message={String(userError.message)} /> : null}
+      {isLoginError ? <Well message={loginError.message} /> : null}
+      {isUserError ? <Well message={userError.message} /> : null}
+
       <h1 className="offscreen">Login</h1>
       <LoginForm loginUser={onLogin} />
     </FormWrapper>

@@ -38,8 +38,8 @@ export const useApiClient = () => {
         const { isError, error, data: newAccessToken } = await refresh();
 
         if (isError) {
-          /** error is already an Error instance, returned from refresh hook */
-          return Promise.reject(error);
+          const refreshError = error as Error;
+          return Promise.reject(new Error(refreshError.message));
         }
 
         if (newAccessToken) {
@@ -50,7 +50,7 @@ export const useApiClient = () => {
 
       if (!response.ok) {
         const error = await response.json();
-        return Promise.reject(new Error(error));
+        return Promise.reject(new Error(error.message));
       }
 
       return await response.json();

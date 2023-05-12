@@ -11,8 +11,8 @@ import { Register } from './register.component';
 const ENDPOINT = 'http://localhost:5000/api/accounts/register/';
 
 describe('Register', () => {
-  it.only('should show error well when isError is true', async () => {
-    const error = 'test-error-message';
+  it('should show error well when isError is true', async () => {
+    const error = { message: 'test-error-message' };
 
     server.use(rest.post(ENDPOINT, (req, res, ctx) => res(ctx.status(SERVER_ERROR), ctx.json(error))));
 
@@ -33,7 +33,7 @@ describe('Register', () => {
     userEvent.click(screen.getByRole('button', { name: 'Register' }));
 
     await waitFor(() => {
-      expect(screen.getByText(error)).toBeInTheDocument();
+      expect(screen.getByText(error.message)).toBeInTheDocument();
     });
   });
 

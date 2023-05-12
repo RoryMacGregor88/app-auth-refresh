@@ -24,7 +24,7 @@ export enum Roles {
   ADMIN = 3,
 }
 
-const App: FC = (): ReactElement => {
+export const App: FC = (): ReactElement => {
   // const { data: appConfig } = useAppConfig();
   const { data: user } = useUser();
   return (

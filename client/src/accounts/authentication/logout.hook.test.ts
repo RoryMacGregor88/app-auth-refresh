@@ -37,7 +37,9 @@ describe('useLogout', () => {
     { status: HTTP_FORBIDDEN, message: 'Forbidden error' },
     { status: HTTP_BAD_REQUEST, message: 'Bad request error' },
   ])('should reject promise for %s error responses', async ({ status, message }) => {
-    server.use(rest.get(ENDPOINT, (req, res, ctx) => res(ctx.status(status), ctx.json(message))));
+    const error = { message };
+
+    server.use(rest.get(ENDPOINT, (req, res, ctx) => res(ctx.status(status), ctx.json(error))));
 
     const { result } = renderHook<Result, unknown>(() => useLogout(), {
       authInitialState: { setAccessToken, setUserId, setUser },

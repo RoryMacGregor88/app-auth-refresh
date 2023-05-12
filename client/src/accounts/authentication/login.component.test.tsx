@@ -12,7 +12,7 @@ const USERS_ENDPOINT = 'http://localhost:5000/api/users/123';
 
 describe('Login', () => {
   it('should show error well when isLoginError is true', async () => {
-    const error = 'test-error-message';
+    const error = { message: 'test-error-message' };
 
     server.use(rest.post(ACCOUNTS_ENDPOINT, (req, res, ctx) => res(ctx.status(SERVER_ERROR), ctx.json(error))));
 
@@ -27,14 +27,14 @@ describe('Login', () => {
     userEvent.click(screen.getByRole('button', { name: 'Login' }));
 
     await waitFor(() => {
-      expect(screen.getByText(error)).toBeInTheDocument();
+      expect(screen.getByText(error.message)).toBeInTheDocument();
     });
   });
 
   it('should show error well when isUserError is true', async () => {
     const userConfig = { id: '123', accessToken: '456' };
 
-    const error = 'test-error-message';
+    const error = { message: 'test-error-message' };
 
     /** successful login request */
     server.use(rest.post(ACCOUNTS_ENDPOINT, (req, res, ctx) => res(ctx.status(HTTP_OK), ctx.json(userConfig))));
@@ -53,7 +53,7 @@ describe('Login', () => {
     userEvent.click(screen.getByRole('button', { name: 'Login' }));
 
     await waitFor(() => {
-      expect(screen.getByText(error)).toBeInTheDocument();
+      expect(screen.getByText(error.message)).toBeInTheDocument();
     });
   });
 });

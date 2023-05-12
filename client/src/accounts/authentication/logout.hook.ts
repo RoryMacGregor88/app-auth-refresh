@@ -17,7 +17,7 @@ export const useLogout = () => {
 
       if (!response.ok) {
         const error = await response.json();
-        return Promise.reject(new Error(error));
+        return Promise.reject(new Error(error.message));
       }
 
       setUserId(null);

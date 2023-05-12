@@ -57,6 +57,7 @@ describe('useRefresh', () => {
     });
   });
 
+  // TODO: loop this like the others
   it('should reject promise for other error responses', async () => {
     server.use(rest.get(REFRESH_ENDPOINT, (req, res, ctx) => res(ctx.status(SERVER_ERROR), ctx.json({}))));
 

@@ -20,8 +20,9 @@ export const Persistent: FC<Props> = ({ user }): ReactElement => {
     const verifyRefreshToken = async () => {
       try {
         await refreshToken();
-      } catch (error) {
-        console.log('Error in Persistent: ', error);
+      } catch (e) {
+        const error = e as Error;
+        console.log('Error in Persistent: ', error.message);
       } finally {
         setIsLoadingToken(false);
       }

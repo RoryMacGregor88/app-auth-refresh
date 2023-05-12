@@ -5,8 +5,8 @@ import { Outlet } from 'react-router-dom';
 
 import { ErrorFallback, errorHandler } from '~/components/error-fallback.component';
 import { useCreateErrorReport } from '~/error-reporting/error-report.hook';
-import Footer from '~/layout/footer.component';
-import Header from '~/layout/header.component';
+import { Footer } from '~/layout/footer.component';
+import { Header } from '~/layout/header.component';
 
 const Bomb = () => {
   throw new Error('💥 CABOOM 💥');

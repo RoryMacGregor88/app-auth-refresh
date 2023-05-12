@@ -15,11 +15,13 @@ export const Register: FC = (): ReactElement => {
     register(form);
   };
 
+  const registerError = error as Error;
+
   return isLoading ? (
     <Loadmask />
   ) : (
     <FormWrapper>
-      {isError ? <Well message={String(error?.message)} status="error" /> : null}
+      {isError ? <Well message={registerError.message} status="error" /> : null}
       {data ? <Well message={ACCOUNT_CREATED_SUCCESS_MESSAGE} status="success" /> : null}
 
       <h1 className="offscreen">Register</h1>

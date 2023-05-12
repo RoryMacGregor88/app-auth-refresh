@@ -62,9 +62,9 @@ describe('useUser', () => {
   });
 
   it('should set isError true and populate error property', async () => {
-    const message = 'test-error-message';
+    const error = { message: 'test-error-message' };
 
-    server.use(rest.get(ENDPOINT, (req, res, ctx) => res(ctx.status(SERVER_ERROR), ctx.json(message))));
+    server.use(rest.get(ENDPOINT, (req, res, ctx) => res(ctx.status(SERVER_ERROR), ctx.json(error))));
 
     const { result } = await renderHook<Result, unknown>(() => useUser(), {
       authInitialState: {
@@ -78,7 +78,7 @@ describe('useUser', () => {
     });
 
     await waitFor(() => {
-      expect(result.current.error.message).toEqual(message);
+      expect(result.current.error.message).toEqual(error.message);
     });
   });
 

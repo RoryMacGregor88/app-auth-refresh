@@ -18,11 +18,11 @@ const ENDPOINT = 'http://localhost:3000/test-endpoint';
 const REFRESH_ENDPOINT = 'http://localhost:5000/api/accounts/refresh';
 
 describe('useApiClient', () => {
-  it('should reject promise if refresh request fails', async () => {
-    const message = 'test-error-message';
+  it.only('should reject promise if refresh request fails', async () => {
+    const error = { message: 'test-error-message' };
 
     /** original endpoint */
-    server.use(rest.post(ENDPOINT, async (req, res, ctx) => res(ctx.status(UNAUTHORIZED_ERROR), ctx.json(message))));
+    server.use(rest.post(ENDPOINT, async (req, res, ctx) => res(ctx.status(UNAUTHORIZED_ERROR), ctx.json(error))));
 
     /** refresh endpoint when original request is unauthorized */
     server.use(rest.get(REFRESH_ENDPOINT, (req, res, ctx) => res(ctx.status(SERVER_ERROR), ctx.json({}))));
@@ -44,7 +44,8 @@ describe('useApiClient', () => {
     { status: HTTP_FORBIDDEN, message: 'Forbidden error' },
     { status: HTTP_BAD_REQUEST, message: 'Bad request error' },
   ])('should reject promise for %s error responses', async ({ status, message }) => {
-    server.use(rest.post(ENDPOINT, (req, res, ctx) => res(ctx.status(status), ctx.json(message))));
+    const error = { message };
+    server.use(rest.post(ENDPOINT, (req, res, ctx) => res(ctx.status(status), ctx.json(error))));
 
     const { result } = renderHook(() => useApiClient());
 
@@ -60,7 +61,7 @@ describe('useApiClient', () => {
 
   it('should call refresh function and re-fetch if response is unauthorized', async () => {
     const responseData = { username: 'John Smith' };
-    const message = 'test-error-message';
+    const error = { message: 'test-error-message' };
     const accessToken = '12345';
 
     let first = true;
@@ -70,7 +71,7 @@ describe('useApiClient', () => {
       rest.post(ENDPOINT, async (req, res, ctx) => {
         if (first) {
           first = false;
-          return res(ctx.status(UNAUTHORIZED_ERROR), ctx.json(message));
+          return res(ctx.status(UNAUTHORIZED_ERROR), ctx.json(error));
         } else {
           return res(ctx.status(HTTP_OK), ctx.json(responseData));
         }

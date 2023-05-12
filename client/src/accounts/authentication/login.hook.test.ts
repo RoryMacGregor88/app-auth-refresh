@@ -35,8 +35,9 @@ describe('useLogin', () => {
     { status: HTTP_BAD_REQUEST, message: 'Bad request error' },
   ])('should reject promise for %s error responses', async ({ status, message }) => {
     const loginForm = { email: 'john@example.com', password: 'otherpassword', accessToken: 'foobar' };
+    const error = { message };
 
-    server.use(rest.post(ENDPOINT, (req, res, ctx) => res(ctx.status(status), ctx.json(message))));
+    server.use(rest.post(ENDPOINT, (req, res, ctx) => res(ctx.status(status), ctx.json(error))));
 
     const { result } = renderHook<Result, unknown>(() => useLogin(), {
       authInitialState: { setAccessToken, setUserId },

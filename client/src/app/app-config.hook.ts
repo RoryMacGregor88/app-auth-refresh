@@ -18,12 +18,10 @@ export const useAppConfig = (): UseQueryResult<AppConfig> =>
 
       if (!response.ok) {
         const error = await response.json();
-
-        throw new Error(`Error fetching app config, Message: ${error.message}`);
-      } else {
-        const data: AppConfig = await response.json();
-
-        return AppConfigData.parse(data);
+        return Promise.reject(new Error(error.message));
       }
+
+      const data: AppConfig = await response.json();
+      return AppConfigData.parse(data);
     },
   });
