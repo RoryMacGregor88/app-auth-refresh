@@ -6,12 +6,11 @@ import { describe, expect, it } from 'vitest';
 
 import { HTTP_OK, SERVER_ERROR, UNAUTHENTICATED_ERROR_MESSAGE, UNAUTHORIZED_ERROR } from '~/api/api.constants';
 import { server } from '~/mocks/server';
-import { act, renderHook, waitFor } from '~/test/utils';
+import { act, renderHook, waitFor } from '~/test/test-renderers';
 
-import { useRefresh } from './refresh.hook';
+import { REFRESH_PATH, useRefresh } from './refresh.hook';
 
-const ACCOUNT_ENDPOINT = 'http://localhost:5000/api/accounts';
-const REFRESH_ENDPOINT = `${ACCOUNT_ENDPOINT}/refresh`;
+const ACCOUNTS_PATH = '/api/accounts';
 
 interface Result {
   id: number;
@@ -32,14 +31,14 @@ describe('useRefresh', () => {
 
   it('should logout if response is unauthorized', async () => {
     server.use(
-      rest.get(REFRESH_ENDPOINT, (req, res, ctx) => {
+      rest.get(`*${REFRESH_PATH}`, (req, res, ctx) => {
         /** refresh endpoint returns 401 unauthorized status */
         return res(ctx.status(UNAUTHORIZED_ERROR), ctx.json({}));
       }),
     );
 
     server.use(
-      rest.get(ACCOUNT_ENDPOINT, (req, res, ctx) => {
+      rest.get(`*${ACCOUNTS_PATH}`, (req, res, ctx) => {
         /** logout endpoint returns successful logout */
         return res(ctx.status(HTTP_OK), ctx.json({}));
       }),
@@ -59,7 +58,7 @@ describe('useRefresh', () => {
 
   // TODO: loop this like the others
   it('should reject promise for other error responses', async () => {
-    server.use(rest.get(REFRESH_ENDPOINT, (req, res, ctx) => res(ctx.status(SERVER_ERROR), ctx.json({}))));
+    server.use(rest.get(`*${REFRESH_PATH}`, (req, res, ctx) => res(ctx.status(SERVER_ERROR), ctx.json({}))));
 
     const { result } = renderHook<Result, unknown>(() => useRefresh());
 
@@ -75,7 +74,7 @@ describe('useRefresh', () => {
   it('should make successful request', async () => {
     const response = { accessToken: '123' };
 
-    server.use(rest.get(REFRESH_ENDPOINT, (req, res, ctx) => res(ctx.status(HTTP_OK), ctx.json(response))));
+    server.use(rest.get(`*${REFRESH_PATH}`, (req, res, ctx) => res(ctx.status(HTTP_OK), ctx.json(response))));
 
     const { result } = renderHook<Result, unknown>(() => useRefresh(), { authInitialState: { setAccessToken } });
 
@@ -85,9 +84,9 @@ describe('useRefresh', () => {
       expect(result.current.isSuccess).toBe(true);
     });
 
-    const accessToken = result.current.data.accessToken;
+    const accessToken = result.current.data;
 
-    expect(setAccessToken).toHaveBeenCalledWith(accessToken);
+    expect(setAccessToken).toHaveBeenCalledWith(response.accessToken);
     expect(accessToken).toEqual(response.accessToken);
   });
 });

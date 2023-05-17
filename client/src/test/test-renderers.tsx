@@ -13,13 +13,13 @@ interface Options {
   authInitialState?: Partial<AuthenticationContextType>;
   initialEntries?: string[];
   renderHookOptions?: RenderHookOptions<unknown>;
-  queryClientOptions?: QueryClientConfig;
 }
 
 const queryClientConfig: QueryClientConfig = {
   defaultOptions: {
     queries: {
       retry: false,
+      notifyOnChangeProps: 'all',
     },
     mutations: {
       retry: false,
@@ -28,17 +28,12 @@ const queryClientConfig: QueryClientConfig = {
 };
 
 const customRender = (ui: ReactElement, options?: Options) => {
-  const { authInitialState, initialEntries, renderHookOptions, queryClientOptions } = options ?? {};
-
-  const config = {
-    ...queryClientConfig,
-    ...queryClientOptions,
-  };
+  const { authInitialState, initialEntries, renderHookOptions } = options ?? {};
 
   return render(ui, {
     wrapper: ({ children }: WrapperParams): ReactElement => (
       <MemoryRouter initialEntries={initialEntries ?? ['/']}>
-        <QueryClientProvider client={new QueryClient(config)}>
+        <QueryClientProvider client={new QueryClient(queryClientConfig)}>
           <AuthenticationProvider initialState={authInitialState ?? {}}>{children}</AuthenticationProvider>
         </QueryClientProvider>
       </MemoryRouter>
@@ -56,16 +51,11 @@ const customRender = (ui: ReactElement, options?: Options) => {
  * @returns - object, see here for shape: https://react-hooks-testing-library.com/reference/api#renderhook-result
  */
 const customRenderHook = <T, P>(callback: () => unknown, options?: Options): RenderHookResult<T, P> => {
-  const { authInitialState, initialEntries, renderHookOptions, queryClientOptions } = options ?? {};
-
-  const config = {
-    ...queryClientConfig,
-    ...queryClientOptions,
-  };
+  const { authInitialState, initialEntries, renderHookOptions } = options ?? {};
 
   const wrapper = ({ children }: WrapperParams): ReactElement => (
     <MemoryRouter initialEntries={initialEntries ?? ['/']}>
-      <QueryClientProvider client={new QueryClient(config)}>
+      <QueryClientProvider client={new QueryClient(queryClientConfig)}>
         <AuthenticationProvider initialState={authInitialState}>{children}</AuthenticationProvider>
       </QueryClientProvider>
     </MemoryRouter>

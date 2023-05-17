@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 
 import { HTTP_OK, SERVER_ERROR } from '~/api/api.constants';
 import { server } from '~/mocks/server';
-import { act, renderHook, waitFor } from '~/test/utils';
+import { act, renderHook, waitFor } from '~/test/test-renderers';
 
 import { useUser } from './user.hook';
 

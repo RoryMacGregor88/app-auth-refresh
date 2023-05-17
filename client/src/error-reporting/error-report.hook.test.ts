@@ -3,7 +3,7 @@ import { rest } from 'msw';
 import { describe, expect, it } from 'vitest';
 
 import { server } from '~/mocks/server';
-import { act, renderHook, waitFor } from '~/test/utils';
+import { act, renderHook, waitFor } from '~/test/test-renderers';
 
 import { ErrorReport, useCreateErrorReport } from './error-report.hook';
 

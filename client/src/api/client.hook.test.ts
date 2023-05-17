@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { rest, server } from '~/mocks/server';
-import { waitFor } from '~/test/utils';
+import { waitFor } from '~/test/test-renderers';
 
 import { api, apiClient, client } from './client';
 

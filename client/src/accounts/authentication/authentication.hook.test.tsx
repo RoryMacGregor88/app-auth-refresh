@@ -3,7 +3,7 @@ import { Dispatch } from 'react';
 
 import { describe, expect, it } from 'vitest';
 
-import { act, renderHook, waitFor } from '~/test/utils';
+import { act, renderHook, waitFor } from '~/test/test-renderers';
 
 import { AuthenticationContextType, User } from './authentication.context';
 import { useAuthentication } from './authentication.hook';

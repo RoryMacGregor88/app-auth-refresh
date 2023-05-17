@@ -5,7 +5,8 @@ import { UNAUTHENTICATED_ERROR_MESSAGE, UNAUTHORIZED_ERROR } from '~/api/api.con
 
 import { useAuthentication } from '../authentication/authentication.hook';
 
-const ENDPOINT = `${import.meta.env.VITE_API_URL}/api/accounts/refresh`;
+export const REFRESH_PATH = '/api/accounts/refresh';
+const ENDPOINT = `${import.meta.env.VITE_API_URL}${REFRESH_PATH}`;
 
 export const useRefresh = (): UseQueryResult<string> => {
   const { setAccessToken } = useAuthentication();

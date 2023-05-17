@@ -1,4 +1,4 @@
-import React, { FC, ReactElement, useEffect } from 'react';
+import { FC, ReactElement, useEffect } from 'react';
 
 import { useLocalStorage } from '@astrosat/react-utils';
 
@@ -7,6 +7,7 @@ import { SunIcon } from './sun-icon.component';
 import { DARK, DARK_LABEL, LIGHT, LIGHT_LABEL, THEME_KEY } from './theme.constants';
 
 interface Props {
+  /** Not used. Uses document root classList, or overrides with local storage. */
   className?: string;
 }
 
@@ -27,7 +28,7 @@ export const ThemeSwitcher: FC<Props> = ({ className }): ReactElement => {
   return (
     <button
       aria-label={label}
-      className={`btn btn-primary btn-circle transition-transform ease-in-out hover:bg-accent hover:text-accent focus:outline-none focus-visible:outline-accent ${className}`}
+      className={`btn-primary btn-circle btn transition-transform ease-in-out hover:bg-accent hover:text-accent focus:outline-none focus-visible:outline-accent ${className}`}
       title={label}
       onClick={() => setTheme(theme === DARK ? LIGHT : DARK)}
     >

@@ -23,7 +23,6 @@ export const useApiClient = () => {
         body: data ? JSON.stringify(data) : undefined,
         credentials: 'include',
         headers: {
-          Authorization: accessToken ? `Bearer ${accessToken}` : undefined,
           'Content-Type': 'application/json',
           ...customHeaders,
         },

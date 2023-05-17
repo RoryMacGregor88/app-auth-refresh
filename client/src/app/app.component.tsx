@@ -2,20 +2,18 @@ import { FC, ReactElement } from 'react';
 
 import { Route, Routes } from 'react-router-dom';
 
-import { useAuthentication } from '~/accounts/authentication/authentication.hook';
 import { Login } from '~/accounts/authentication/login.component';
 import { Register } from '~/accounts/authentication/register.component';
 import { useUser } from '~/accounts/users/user.hook';
 import { Admin } from '~/admin/admin.component';
+import { Persistent, RefetchToken } from '~/app/persistent.component';
 import { Layout } from '~/layout/layout.component';
 
-import { useAppConfig } from './app-config.hook';
 import { Authorization } from './authorization.component';
 import { Editor } from './editor.component';
 import { Home } from './home.component';
 import { Links } from './links.component';
 import { Lounge } from './lounge.component';
-import { Persistent } from './persistent.component';
 import { Unauthorized } from './unauthorized.component';
 
 export enum Roles {
@@ -25,8 +23,10 @@ export enum Roles {
 }
 
 export const App: FC = (): ReactElement => {
-  // const { data: appConfig } = useAppConfig();
   const { data: user } = useUser();
+
+  const handleRefreshToken = async (refetch: RefetchToken) => await refetch();
+
   return (
     <Routes>
       <Route element={<Layout />} path="/">
@@ -37,7 +37,7 @@ export const App: FC = (): ReactElement => {
         <Route element={<Unauthorized />} path="unauthorized" />
 
         {/* we want to protect these routes */}
-        <Route element={<Persistent user={user} />}>
+        <Route element={<Persistent handleRefreshToken={handleRefreshToken} user={user} />}>
           <Route element={<Authorization roles={[Roles.USER]} user={user} />}>
             <Route element={<Home />} path="/" />
           </Route>

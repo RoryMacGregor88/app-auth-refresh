@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 
 import { AuthenticationProvider } from '~/accounts/authentication/authentication.context';
-import App from '~/app/app.component';
+import { App } from '~/app/app.component';
 
 import './i18n/i18n';
 

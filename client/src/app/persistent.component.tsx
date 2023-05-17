@@ -1,36 +1,44 @@
-import { FC, ReactElement, useEffect, useState } from 'react';
+import { FC, ReactElement, useCallback, useEffect, useState } from 'react';
 
+import { QueryObserverResult, RefetchOptions, RefetchQueryFilters } from '@tanstack/react-query';
 import { Outlet } from 'react-router-dom';
 
 import { useAuthentication } from '~/accounts/authentication/authentication.hook';
 import { useRefresh } from '~/accounts/authentication/refresh.hook';
 import { User } from '~/accounts/users/users.hook';
+import { LOADING_MESSAGE } from '~/api/api.constants';
+
+/** refetch method type from @tanstack/react-query */
+export type RefetchToken = <TPageData>(
+  options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined,
+) => Promise<QueryObserverResult<string, unknown>>;
 
 interface Props {
-  user: User;
+  user: User | null;
+  handleRefreshToken: (refetch: RefetchToken) => void;
 }
 
-export const Persistent: FC<Props> = ({ user }): ReactElement => {
+export const Persistent: FC<Props> = ({ user, handleRefreshToken }): ReactElement => {
   const { accessToken } = useAuthentication();
-  const { refetch: refreshToken } = useRefresh();
+  const { refetch, isError: isRefreshError, error: refreshError } = useRefresh();
 
   const [isLoadingToken, setIsLoadingToken] = useState(true);
 
-  useEffect(() => {
-    const verifyRefreshToken = async () => {
-      try {
-        await refreshToken();
-      } catch (e) {
-        const error = e as Error;
-        console.log('Error in Persistent: ', error.message);
-      } finally {
-        setIsLoadingToken(false);
-      }
-    };
+  const verifyRefreshToken = useCallback(async () => {
+    await handleRefreshToken(refetch);
 
+    setIsLoadingToken(false);
+  }, [handleRefreshToken, refetch]);
+
+  useEffect(() => {
     accessToken ? setIsLoadingToken(false) : verifyRefreshToken();
-  }, [accessToken, refreshToken]);
+  }, [accessToken, verifyRefreshToken]);
+
+  if (isRefreshError) {
+    const error = refreshError as Error;
+    throw new Error(error.message);
+  }
 
   const hasRefreshed = !!user && !isLoadingToken;
-  return hasRefreshed ? <Outlet /> : <p>Loading...</p>;
+  return hasRefreshed ? <Outlet /> : <p>{LOADING_MESSAGE}</p>;
 };

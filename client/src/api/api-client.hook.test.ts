@@ -10,7 +10,7 @@ import {
   UNAUTHORIZED_ERROR,
 } from '~/api/api.constants';
 import { rest, server } from '~/mocks/server';
-import { act, renderHook, waitFor } from '~/test/utils';
+import { act, renderHook, waitFor } from '~/test/test-renderers';
 
 import { useApiClient } from './api-client.hook';
 

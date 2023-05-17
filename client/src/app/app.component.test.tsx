@@ -1,7 +1,7 @@
 /*eslint import/namespace: ["off"]*/
 import { describe, expect, it } from 'vitest';
 
-import { render, screen } from '~/test/utils';
+import { render, screen } from '~/test/test-renderers';
 
 import { App } from './app.component';
 

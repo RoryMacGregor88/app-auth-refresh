@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 
 import { HTTP_OK, SERVER_ERROR } from '~/api/api.constants';
 import { rest, server } from '~/mocks/server';
-import { render, screen, userEvent, waitFor } from '~/test/utils';
+import { render, screen, userEvent, waitFor } from '~/test/test-renderers';
 
 import { Login } from './login.component';
 

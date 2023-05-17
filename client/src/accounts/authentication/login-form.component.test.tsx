@@ -7,7 +7,7 @@ import {
   PASSWORD_REQUIRED_MESSAGE,
 } from '~/accounts/accounts.constants';
 import { LoginForm, LoginUser } from '~/accounts/authentication/login-form.component';
-import { render, screen, userEvent, waitFor } from '~/test/utils';
+import { render, screen, userEvent, waitFor } from '~/test/test-renderers';
 
 let loginUser: LoginUser;
 

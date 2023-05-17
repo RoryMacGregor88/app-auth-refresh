@@ -9,6 +9,7 @@ import {
   FIRST_NAME_REQUIRED_MESSAGE,
   INVALID_EMAIL_MESSAGE,
   LAST_NAME_REQUIRED_MESSAGE,
+  PASSWORDS_NEED_TO_MATCH_MESSAGE,
   PASSWORD_CONFIRM_REQUIRED_MESSAGE,
   PASSWORD_REQUIRED_MESSAGE,
 } from '~/accounts/accounts.constants';
@@ -30,13 +31,23 @@ const LAST_NAME_ID = 'lastName';
 const PASSWORD_ID = 'password';
 const PASSWORD_CONFIRM_ID = 'confirmPassword';
 
-export const RegistrationFormSchema = z.object({
-  [EMAIL_ID]: z.string().min(1, { message: EMAIL_REQUIRED_MESSAGE }).email({ message: INVALID_EMAIL_MESSAGE }),
-  [FIRST_NAME_ID]: z.string().min(1, { message: FIRST_NAME_REQUIRED_MESSAGE }),
-  [LAST_NAME_ID]: z.string().min(1, { message: LAST_NAME_REQUIRED_MESSAGE }),
-  [PASSWORD_ID]: z.string().min(1, { message: PASSWORD_REQUIRED_MESSAGE }),
-  [PASSWORD_CONFIRM_ID]: z.string().min(1, { message: PASSWORD_CONFIRM_REQUIRED_MESSAGE }),
-});
+export const RegistrationFormSchema = z
+  .object({
+    [EMAIL_ID]: z.string().min(1, { message: EMAIL_REQUIRED_MESSAGE }).email({ message: INVALID_EMAIL_MESSAGE }),
+    [FIRST_NAME_ID]: z.string().min(1, { message: FIRST_NAME_REQUIRED_MESSAGE }),
+    [LAST_NAME_ID]: z.string().min(1, { message: LAST_NAME_REQUIRED_MESSAGE }),
+    [PASSWORD_ID]: z.string().min(1, { message: PASSWORD_REQUIRED_MESSAGE }),
+    [PASSWORD_CONFIRM_ID]: z.string().min(1, { message: PASSWORD_CONFIRM_REQUIRED_MESSAGE }),
+  })
+  .superRefine((fields, ctx) => {
+    if (fields[PASSWORD_ID] !== fields[PASSWORD_CONFIRM_ID]) {
+      ctx.addIssue({
+        code: 'custom',
+        message: PASSWORDS_NEED_TO_MATCH_MESSAGE,
+        path: [PASSWORD_CONFIRM_ID],
+      });
+    }
+  });
 
 const defaultFormValues = {
   [EMAIL_ID]: '',
@@ -59,6 +70,8 @@ export const RegisterForm: FC<FormProps> = ({ registerUser }): ReactElement => {
   const onSubmit: SubmitHandler<RegistrationFormType> = form => registerUser(form);
 
   const isDisabled = !!Object.keys(errors).length || isSubmitting || !isDirty;
+
+  console.log('ERRORS: ', errors);
 
   return (
     <form className="flex flex-col p-8" onSubmit={handleSubmit(onSubmit)}>

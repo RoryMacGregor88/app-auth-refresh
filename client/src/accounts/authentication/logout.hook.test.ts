@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 import { useLogout } from '~/accounts/authentication/logout.hook';
 import { HTTP_BAD_REQUEST, HTTP_FORBIDDEN, HTTP_OK, SERVER_ERROR } from '~/api/api.constants';
 import { rest, server } from '~/mocks/server';
-import { act, renderHook, waitFor } from '~/test/utils';
+import { act, renderHook, waitFor } from '~/test/test-renderers';
 
 import { User } from './authentication.context';
 

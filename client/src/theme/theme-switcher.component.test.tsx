@@ -2,7 +2,7 @@ import React from 'react';
 
 import { describe, expect, it } from 'vitest';
 
-import { render, screen, userEvent } from '~/test/utils';
+import { render, screen, userEvent } from '~/test/test-renderers';
 
 import { ThemeSwitcher } from './theme-switcher.component';
 

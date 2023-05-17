@@ -10,7 +10,7 @@ import {
   PASSWORD_REQUIRED_MESSAGE,
 } from '~/accounts/accounts.constants';
 import { RegisterForm, RegisterUser } from '~/accounts/authentication/register-form.component';
-import { render, screen, userEvent, waitFor } from '~/test/utils';
+import { render, screen, userEvent, waitFor } from '~/test/test-renderers';
 
 let registerUser: RegisterUser;
 
@@ -70,12 +70,10 @@ describe('RegisterForm', () => {
     render(<RegisterForm registerUser={registerUser} />);
 
     const email = 'test@email.com';
-    const confirmPassword = '123456';
     const firstName = 'John';
     const lastName = 'Smith';
 
     await userEvent.type(screen.getByRole('textbox', { name: 'Email * :' }), email);
-    await userEvent.type(screen.getByTestId('confirmPassword'), confirmPassword);
     await userEvent.type(screen.getByRole('textbox', { name: 'First Name * :' }), firstName);
     await userEvent.type(screen.getByRole('textbox', { name: 'Last Name * :' }), lastName);
 

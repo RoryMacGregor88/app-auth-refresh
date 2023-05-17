@@ -2,7 +2,7 @@ import { rest } from 'msw';
 import { describe, expect, it } from 'vitest';
 
 import { server } from '~/mocks/server';
-import { renderHook, waitFor } from '~/test/utils';
+import { renderHook, waitFor } from '~/test/test-renderers';
 
 import { AppConfig, useAppConfig } from './app-config.hook';
 

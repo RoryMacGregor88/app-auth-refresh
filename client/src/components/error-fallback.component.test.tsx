@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { UserEvent } from '@testing-library/user-event/dist/types/setup/setup';
-import { render, screen, userEvent } from '~/test/utils';
+import { render, screen, userEvent } from '~/test/test-renderers';
 import { ErrorReport } from '~/error-reporting/error-report.hook';
 
 import { ErrorFallback } from './error-fallback.component';

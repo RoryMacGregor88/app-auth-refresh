@@ -15,7 +15,7 @@ export const Unauthorized: FC = (): ReactElement => {
 
       <p>You do not have access to the requested page.</p>
 
-      <div className="flexGrow p-4">
+      <div className="grow p-4">
         <button className="cursor-pointer rounded-md border-2 border-white bg-green-500 p-2" onClick={goBack}>
           Go Back
         </button>
