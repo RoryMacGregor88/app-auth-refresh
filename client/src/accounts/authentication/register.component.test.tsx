@@ -71,12 +71,10 @@ describe('RegisterForm', () => {
     render(<RegisterForm registerUser={registerUser} />);
 
     const email = 'test@email.com';
-    const confirmPassword = '123456';
     const firstName = 'John';
     const lastName = 'Smith';
 
     await userEvent.type(screen.getByRole('textbox', { name: 'Email * :' }), email);
-    await userEvent.type(screen.getByTestId('confirmPassword'), confirmPassword);
     await userEvent.type(screen.getByRole('textbox', { name: 'First Name * :' }), firstName);
     await userEvent.type(screen.getByRole('textbox', { name: 'Last Name * :' }), lastName);
 
