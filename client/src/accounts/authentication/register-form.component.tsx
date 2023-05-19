@@ -71,8 +71,6 @@ export const RegisterForm: FC<FormProps> = ({ registerUser }): ReactElement => {
 
   const isDisabled = !!Object.keys(errors).length || isSubmitting || !isDirty;
 
-  console.log('ERRORS: ', errors);
-
   return (
     <form className="flex flex-col p-8" onSubmit={handleSubmit(onSubmit)}>
       <label htmlFor={EMAIL_ID}>
