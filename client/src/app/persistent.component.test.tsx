@@ -38,25 +38,23 @@ const renderComponent = ({ user = null, accessToken = undefined, handleRefreshTo
         <Route element={<TestComponent />} path="/test-path" />
       </Route>
     </Routes>,
-    { authInitialState: { accessToken }, initialEntries: ['test-path'] },
+    { authInitialState: { accessToken }, initialEntries: ['/test-path'] },
   );
 
   return { handleRefreshToken: mockHandleRefreshToken };
 };
 
 describe('Persistent', () => {
-  it.only('should throw error if error refreshing token', async () => {
+  it('should throw error if error refreshing token', async () => {
     const error = { message: 'test-error-message' };
 
     server.use(rest.get(`*${REFRESH_PATH}`, (req, res, ctx) => res(ctx.status(SERVER_ERROR), ctx.json(error))));
 
     try {
-      /**
-       * trigger real network request by calling refresh
-       * function returned by useRefresh hook
-       */
+      /** trigger real network request */
       renderComponent({ handleRefreshToken: cb => cb() });
     } catch (e) {
+      console.log('ERROR: ', e);
       // TODO: false pass, same `isStale` issue as refresh test
       expect(e).toBe(error.message);
     }

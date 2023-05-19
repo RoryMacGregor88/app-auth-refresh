@@ -29,7 +29,7 @@ describe('Login Form', () => {
     const password = '123456';
 
     await userEvent.type(screen.getByRole('textbox', { name: 'Email * :' }), email);
-    await userEvent.type(screen.getByTestId('password'), password);
+    await userEvent.type(screen.getByLabelText('Password *:'), password);
 
     expect(screen.getByRole('button', { name: 'Login' })).toBeDisabled();
     expect(screen.getByText(INVALID_EMAIL_MESSAGE)).toBeInTheDocument();
@@ -40,7 +40,7 @@ describe('Login Form', () => {
 
     const password = '123456';
 
-    await userEvent.type(screen.getByTestId('password'), password);
+    await userEvent.type(screen.getByLabelText('Password *:'), password);
 
     await userEvent.click(screen.getByRole('button', { name: 'Login' }));
 
@@ -74,7 +74,7 @@ describe('Login Form', () => {
     const password = '123456';
 
     await userEvent.type(screen.getByRole('textbox', { name: 'Email * :' }), email);
-    await userEvent.type(screen.getByTestId('password'), password);
+    await userEvent.type(screen.getByLabelText('Password *:'), password);
 
     const submitButton = screen.getByRole('button', { name: 'Login' });
     expect(submitButton).toBeEnabled();

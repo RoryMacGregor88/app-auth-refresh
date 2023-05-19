@@ -23,8 +23,7 @@ describe('Login', () => {
     const password = '123456';
 
     await userEvent.type(screen.getByRole('textbox', { name: 'Email * :' }), email);
-    await userEvent.type(screen.getByTestId('password'), password);
-
+    await userEvent.type(screen.getByLabelText('Password *:'), password);
     await userEvent.click(screen.getByRole('button', { name: 'Login' }));
 
     await waitFor(() => {
@@ -49,7 +48,7 @@ describe('Login', () => {
     const password = '123456';
 
     await userEvent.type(screen.getByRole('textbox', { name: 'Email * :' }), email);
-    await userEvent.type(screen.getByTestId('password'), password);
+    await userEvent.type(screen.getByLabelText('Password *:'), password);
 
     await userEvent.click(screen.getByRole('button', { name: 'Login' }));
 

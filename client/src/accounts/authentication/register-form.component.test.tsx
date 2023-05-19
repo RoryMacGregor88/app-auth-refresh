@@ -35,8 +35,8 @@ describe('RegisterForm', () => {
     const lastName = 'Smith';
 
     await userEvent.type(screen.getByRole('textbox', { name: 'Email * :' }), email);
-    await userEvent.type(screen.getByTestId('password'), password);
-    await userEvent.type(screen.getByTestId('confirmPassword'), confirmPassword);
+    await userEvent.type(screen.getByLabelText('Password *:'), password);
+    await userEvent.type(screen.getByLabelText('Password Confirmation *:'), confirmPassword);
     await userEvent.type(screen.getByRole('textbox', { name: 'First Name * :' }), firstName);
     await userEvent.type(screen.getByRole('textbox', { name: 'Last Name * :' }), lastName);
 
@@ -52,8 +52,8 @@ describe('RegisterForm', () => {
     const firstName = 'John';
     const lastName = 'Smith';
 
-    await userEvent.type(screen.getByTestId('password'), password);
-    await userEvent.type(screen.getByTestId('confirmPassword'), confirmPassword);
+    await userEvent.type(screen.getByLabelText('Password *:'), password);
+    await userEvent.type(screen.getByLabelText('Password Confirmation *:'), confirmPassword);
     await userEvent.type(screen.getByRole('textbox', { name: 'First Name * :' }), firstName);
     await userEvent.type(screen.getByRole('textbox', { name: 'Last Name * :' }), lastName);
 
@@ -95,7 +95,7 @@ describe('RegisterForm', () => {
     const lastName = 'Smith';
 
     await userEvent.type(screen.getByRole('textbox', { name: 'Email * :' }), email);
-    await userEvent.type(screen.getByTestId('password'), password);
+    await userEvent.type(screen.getByLabelText('Password *:'), password);
     await userEvent.type(screen.getByRole('textbox', { name: 'First Name * :' }), firstName);
     await userEvent.type(screen.getByRole('textbox', { name: 'Last Name * :' }), lastName);
 
@@ -117,8 +117,8 @@ describe('RegisterForm', () => {
     const lastName = 'Smith';
 
     await userEvent.type(screen.getByRole('textbox', { name: 'Email * :' }), email);
-    await userEvent.type(screen.getByTestId('password'), password);
-    await userEvent.type(screen.getByTestId('confirmPassword'), confirmPassword);
+    await userEvent.type(screen.getByLabelText('Password *:'), password);
+    await userEvent.type(screen.getByLabelText('Password Confirmation *:'), confirmPassword);
     await userEvent.type(screen.getByRole('textbox', { name: 'Last Name * :' }), lastName);
 
     await userEvent.click(screen.getByRole('button', { name: 'Register' }));
@@ -139,8 +139,8 @@ describe('RegisterForm', () => {
     const firstName = 'Smith';
 
     await userEvent.type(screen.getByRole('textbox', { name: 'Email * :' }), email);
-    await userEvent.type(screen.getByTestId('password'), password);
-    await userEvent.type(screen.getByTestId('confirmPassword'), confirmPassword);
+    await userEvent.type(screen.getByLabelText('Password *:'), password);
+    await userEvent.type(screen.getByLabelText('Password Confirmation *:'), confirmPassword);
     await userEvent.type(screen.getByRole('textbox', { name: 'First Name * :' }), firstName);
 
     await userEvent.click(screen.getByRole('button', { name: 'Register' }));
@@ -162,8 +162,8 @@ describe('RegisterForm', () => {
     const lastName = 'Smith';
 
     await userEvent.type(screen.getByRole('textbox', { name: 'Email * :' }), email);
-    await userEvent.type(screen.getByTestId('password'), password);
-    await userEvent.type(screen.getByTestId('confirmPassword'), confirmPassword);
+    await userEvent.type(screen.getByLabelText('Password *:'), password);
+    await userEvent.type(screen.getByLabelText('Password Confirmation *:'), confirmPassword);
     await userEvent.type(screen.getByRole('textbox', { name: 'First Name * :' }), firstName);
     await userEvent.type(screen.getByRole('textbox', { name: 'Last Name * :' }), lastName);
 

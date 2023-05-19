@@ -67,7 +67,6 @@ export const LoginForm: FC<FormProps> = ({ loginUser }): ReactElement => {
           type={PASSWORD_ID}
           {...register(PASSWORD_ID)}
           className="form-input"
-          data-testid={PASSWORD_ID}
           disabled={isSubmitting}
         />
         {errors[PASSWORD_ID] ? <FieldError>{errors[PASSWORD_ID].message}</FieldError> : null}

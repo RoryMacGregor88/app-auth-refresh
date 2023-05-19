@@ -86,7 +86,6 @@ export const RegisterForm: FC<FormProps> = ({ registerUser }): ReactElement => {
       </label>
       <div>
         <input
-          data-testid={PASSWORD_ID}
           id={PASSWORD_ID}
           type={PASSWORD_ID}
           {...register(PASSWORD_ID)}
@@ -101,7 +100,6 @@ export const RegisterForm: FC<FormProps> = ({ registerUser }): ReactElement => {
       </label>
       <div>
         <input
-          data-testid={PASSWORD_CONFIRM_ID}
           id={PASSWORD_CONFIRM_ID}
           type={PASSWORD_ID}
           {...register(PASSWORD_CONFIRM_ID)}

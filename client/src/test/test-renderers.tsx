@@ -1,4 +1,4 @@
-import { JSXElementConstructor, ReactElement } from 'react';
+import { ReactElement } from 'react';
 
 import { QueryClient, QueryClientConfig, QueryClientProvider } from '@tanstack/react-query';
 import { RenderHookOptions, RenderHookResult, render, renderHook } from '@testing-library/react';
@@ -7,7 +7,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { AuthenticationContextType, AuthenticationProvider } from '~/accounts/authentication/authentication.context';
 
 interface WrapperParams {
-  children: ReactElement<unknown, string | JSXElementConstructor<unknown>>;
+  children: ReactElement;
 }
 interface Options {
   authInitialState?: Partial<AuthenticationContextType>;
