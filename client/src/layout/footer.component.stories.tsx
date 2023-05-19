@@ -1,18 +1,17 @@
-import React from 'react';
+import { Meta, StoryObj } from '@storybook/react';
 
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Footer } from './footer.component';
 
-import Footer from './footer.component';
-
-const Index = {
-  title: 'Components/Footer',
+const meta: Meta<typeof Footer> = {
+  title: 'Components/OneOff/Footer',
   component: Footer,
   parameters: { layout: 'fullscreen' },
-} as ComponentMeta<typeof Footer>;
+};
 
-export default Index;
+export default meta;
 
-const Template: ComponentStory<typeof Footer> = args => <Footer {...args} />;
+type Story = StoryObj<typeof meta>;
 
-export const Default = Template.bind({});
-Default.args = {};
+export const ShowComponent: Story = {
+  args: {},
+};

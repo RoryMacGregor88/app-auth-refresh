@@ -1,10 +1,9 @@
 import React from 'react';
 import type { Preview } from '@storybook/react';
 import { QueryClient, QueryClientConfig, QueryClientProvider } from '@tanstack/react-query';
-import { MemoryRouter } from 'react-router-dom';
-
-import { AuthenticationProvider } from '~/accounts/authentication/authentication.context';
+import { AuthenticationProvider } from '../src/accounts/authentication/authentication.context';
 import i18n from './i18n';
+import { MemoryRouter } from 'react-router-dom';
 
 import 'tailwindcss/tailwind.css';
 
@@ -35,6 +34,7 @@ const queryClientConfig: QueryClientConfig = {
     },
   },
 };
+const queryClient = new QueryClient(queryClientConfig);
 
 const preview: Preview = {
   parameters: {
@@ -55,7 +55,7 @@ const preview: Preview = {
   decorators: [
     Story => (
       <MemoryRouter>
-        <QueryClientProvider client={new QueryClient(queryClientConfig)}>
+        <QueryClientProvider client={queryClient}>
           <AuthenticationProvider>
             <Story />
           </AuthenticationProvider>

@@ -1,4 +1,4 @@
-import { FC, ReactElement } from 'react';
+import { FC, ReactElement, useEffect } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -44,9 +44,13 @@ export const LoginForm: FC<FormProps> = ({ loginUser }): ReactElement => {
     mode: 'all',
   });
 
-  const onSubmit: SubmitHandler<LoginFormType> = form => loginUser(form);
+  const onSubmit: SubmitHandler<LoginFormType> = form => {
+    console.log('XXX', form);
+    return loginUser(form);
+  };
 
   const isDisabled = !!Object.keys(errors).length || isSubmitting || !isDirty;
+  console.log('YYY', isDisabled);
 
   return (
     <form className="flex flex-col p-8" onSubmit={handleSubmit(onSubmit)}>
@@ -54,7 +58,14 @@ export const LoginForm: FC<FormProps> = ({ loginUser }): ReactElement => {
         Email <MandatoryField />:
       </label>
       <div>
-        <input id={EMAIL_ID} type={EMAIL_ID} {...register(EMAIL_ID)} className="form-input" disabled={isSubmitting} />
+        <input
+          data-testid={EMAIL_ID}
+          id={EMAIL_ID}
+          type={EMAIL_ID}
+          {...register(EMAIL_ID)}
+          className="form-input"
+          disabled={isSubmitting}
+        />
         {errors[EMAIL_ID] ? <FieldError>{errors[EMAIL_ID].message}</FieldError> : null}
       </div>
 
@@ -63,11 +74,11 @@ export const LoginForm: FC<FormProps> = ({ loginUser }): ReactElement => {
       </label>
       <div>
         <input
+          data-testid={PASSWORD_ID}
           id={PASSWORD_ID}
           type={PASSWORD_ID}
           {...register(PASSWORD_ID)}
           className="form-input"
-          data-testid={PASSWORD_ID}
           disabled={isSubmitting}
         />
         {errors[PASSWORD_ID] ? <FieldError>{errors[PASSWORD_ID].message}</FieldError> : null}

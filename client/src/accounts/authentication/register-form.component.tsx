@@ -1,4 +1,4 @@
-import { FC, ReactElement } from 'react';
+import { FC, ReactElement, useEffect } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -77,7 +77,14 @@ export const RegisterForm: FC<FormProps> = ({ registerUser }): ReactElement => {
         Email <MandatoryField />:
       </label>
       <div>
-        <input id={EMAIL_ID} type={EMAIL_ID} {...register(EMAIL_ID)} className="form-input" disabled={isSubmitting} />
+        <input
+          data-testid={EMAIL_ID}
+          id={EMAIL_ID}
+          type={EMAIL_ID}
+          {...register(EMAIL_ID)}
+          className="form-input"
+          disabled={isSubmitting}
+        />
         {errors[EMAIL_ID] ? <FieldError>{errors[EMAIL_ID].message}</FieldError> : null}
       </div>
 
@@ -116,6 +123,7 @@ export const RegisterForm: FC<FormProps> = ({ registerUser }): ReactElement => {
       </label>
       <div>
         <input
+          data-testid={FIRST_NAME_ID}
           id={FIRST_NAME_ID}
           type="text"
           {...register(FIRST_NAME_ID)}
@@ -130,6 +138,7 @@ export const RegisterForm: FC<FormProps> = ({ registerUser }): ReactElement => {
       </label>
       <div>
         <input
+          data-testid={LAST_NAME_ID}
           id={LAST_NAME_ID}
           type="text"
           {...register(LAST_NAME_ID)}

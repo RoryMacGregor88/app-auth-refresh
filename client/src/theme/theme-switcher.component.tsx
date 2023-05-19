@@ -1,4 +1,4 @@
-import { FC, ReactElement, useEffect } from 'react';
+import React, { FC, ReactElement, useEffect } from 'react';
 
 import { useLocalStorage } from '@astrosat/react-utils';
 
