@@ -45,12 +45,10 @@ export const LoginForm: FC<FormProps> = ({ loginUser }): ReactElement => {
   });
 
   const onSubmit: SubmitHandler<LoginFormType> = form => {
-    console.log('XXX', form);
     return loginUser(form);
   };
 
   const isDisabled = !!Object.keys(errors).length || isSubmitting || !isDirty;
-  console.log('YYY', isDisabled);
 
   return (
     <form className="flex flex-col p-8" onSubmit={handleSubmit(onSubmit)}>

@@ -34,7 +34,6 @@ const queryClientConfig: QueryClientConfig = {
     },
   },
 };
-const queryClient = new QueryClient(queryClientConfig);
 
 const preview: Preview = {
   parameters: {
@@ -55,7 +54,7 @@ const preview: Preview = {
   decorators: [
     Story => (
       <MemoryRouter>
-        <QueryClientProvider client={queryClient}>
+        <QueryClientProvider client={new QueryClient(queryClientConfig)}>
           <AuthenticationProvider>
             <Story />
           </AuthenticationProvider>
