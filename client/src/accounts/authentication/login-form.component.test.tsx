@@ -42,7 +42,7 @@ describe('Login Form', () => {
 
     await userEvent.type(screen.getByTestId('password'), password);
 
-    userEvent.click(screen.getByRole('button', { name: 'Login' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Login' }));
 
     await waitFor(() => {
       expect(screen.getByText(EMAIL_REQUIRED_MESSAGE)).toBeInTheDocument();
@@ -58,7 +58,7 @@ describe('Login Form', () => {
 
     await userEvent.type(screen.getByRole('textbox', { name: 'Email * :' }), email);
 
-    userEvent.click(screen.getByRole('button', { name: 'Login' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Login' }));
 
     await waitFor(() => {
       expect(screen.getByText(PASSWORD_REQUIRED_MESSAGE)).toBeInTheDocument();
@@ -79,7 +79,7 @@ describe('Login Form', () => {
     const submitButton = screen.getByRole('button', { name: 'Login' });
     expect(submitButton).toBeEnabled();
 
-    userEvent.click(submitButton);
+    await userEvent.click(submitButton);
 
     await waitFor(() => {
       expect(loginUser).toHaveBeenCalledWith({ email, password });

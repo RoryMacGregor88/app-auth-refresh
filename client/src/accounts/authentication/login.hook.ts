@@ -5,7 +5,8 @@ import { useApiClient } from '~/api/api-client.hook';
 
 import { useAuthentication } from './authentication.hook';
 
-const ENDPOINT = `${import.meta.env.VITE_API_URL}/api/accounts/`;
+export const PATH = '/api/accounts/';
+const ENDPOINT = `${import.meta.env.VITE_API_URL}${PATH}`;
 
 export const LoginFormSchema = z.object({
   email: z.string().email(),

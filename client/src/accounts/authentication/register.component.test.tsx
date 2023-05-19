@@ -58,7 +58,7 @@ describe('RegisterForm', () => {
     await userEvent.type(screen.getByRole('textbox', { name: 'First Name * :' }), firstName);
     await userEvent.type(screen.getByRole('textbox', { name: 'Last Name * :' }), lastName);
 
-    userEvent.click(screen.getByRole('button', { name: 'Register' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Register' }));
 
     await waitFor(() => {
       expect(screen.getByText(EMAIL_REQUIRED_MESSAGE)).toBeInTheDocument();
@@ -80,7 +80,7 @@ describe('RegisterForm', () => {
     await userEvent.type(screen.getByRole('textbox', { name: 'First Name * :' }), firstName);
     await userEvent.type(screen.getByRole('textbox', { name: 'Last Name * :' }), lastName);
 
-    userEvent.click(screen.getByRole('button', { name: 'Register' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Register' }));
 
     await waitFor(() => {
       expect(screen.getByText(PASSWORD_REQUIRED_MESSAGE)).toBeInTheDocument();
@@ -102,7 +102,7 @@ describe('RegisterForm', () => {
     await userEvent.type(screen.getByRole('textbox', { name: 'First Name * :' }), firstName);
     await userEvent.type(screen.getByRole('textbox', { name: 'Last Name * :' }), lastName);
 
-    userEvent.click(screen.getByRole('button', { name: 'Register' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Register' }));
 
     await waitFor(() => {
       expect(screen.getByText(PASSWORD_CONFIRM_REQUIRED_MESSAGE)).toBeInTheDocument();
@@ -124,7 +124,7 @@ describe('RegisterForm', () => {
     await userEvent.type(screen.getByTestId('confirmPassword'), confirmPassword);
     await userEvent.type(screen.getByRole('textbox', { name: 'Last Name * :' }), lastName);
 
-    userEvent.click(screen.getByRole('button', { name: 'Register' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Register' }));
 
     await waitFor(() => {
       expect(screen.getByText(FIRST_NAME_REQUIRED_MESSAGE)).toBeInTheDocument();
@@ -146,7 +146,7 @@ describe('RegisterForm', () => {
     await userEvent.type(screen.getByTestId('confirmPassword'), confirmPassword);
     await userEvent.type(screen.getByRole('textbox', { name: 'First Name * :' }), firstName);
 
-    userEvent.click(screen.getByRole('button', { name: 'Register' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Register' }));
 
     await waitFor(() => {
       expect(screen.getByText(LAST_NAME_REQUIRED_MESSAGE)).toBeInTheDocument();
@@ -187,7 +187,7 @@ describe('RegisterForm', () => {
     const submitButton = screen.getByRole('button', { name: 'Register' });
     expect(submitButton).toBeEnabled();
 
-    userEvent.click(submitButton);
+    await userEvent.click(submitButton);
 
     const expected = {
       email,

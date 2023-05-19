@@ -6,7 +6,7 @@ import { useAuthentication } from '~/accounts/authentication/authentication.hook
 import { User } from '~/accounts/users/users.hook';
 
 interface Props {
-  user: User;
+  user: User | null;
   roles: number[];
 }
 
