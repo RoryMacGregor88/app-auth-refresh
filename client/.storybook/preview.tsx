@@ -1,10 +1,9 @@
 import React from 'react';
 import type { Preview } from '@storybook/react';
 import { QueryClient, QueryClientConfig, QueryClientProvider } from '@tanstack/react-query';
-import { MemoryRouter } from 'react-router-dom';
-
-import { AuthenticationProvider } from '~/accounts/authentication/authentication.context';
+import { AuthenticationProvider } from '../src/accounts/authentication/authentication.context';
 import i18n from './i18n';
+import { MemoryRouter } from 'react-router-dom';
 
 import 'tailwindcss/tailwind.css';
 

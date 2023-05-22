@@ -1,18 +1,21 @@
-import React from 'react';
-
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 
 import { AstrosatSpinner } from './spinner.component';
 
-const Index = {
-  title: 'Components/Astrosat Spinner',
+const meta: Meta<typeof AstrosatSpinner> = {
+  title: 'Components/Reusable/AstrosatSpinner',
   component: AstrosatSpinner,
   parameters: { layout: 'fullscreen' },
-} as ComponentMeta<typeof AstrosatSpinner>;
+  tags: ['autodocs'],
+  argTypes: {
+    handleErrorReport: { action: 'handleErrorReport' },
+  },
+};
 
-export default Index;
+export default meta;
 
-const Template: ComponentStory<typeof AstrosatSpinner> = args => <AstrosatSpinner {...args} />;
+type Story = StoryObj<typeof meta>;
 
-export const Default = Template.bind({});
-Default.args = {};
+export const Default: Story = {
+  args: {},
+};
